@@ -1,0 +1,51 @@
+{
+  "name": "@varolisto/shared-schemas",
+  "version": "0.1.0",
+  "description": "Shared Zod schemas and CLABE utilities for Varolisto applications",
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./schemas": {
+      "import": "./dist/esm/schemas/index.js",
+      "require": "./dist/cjs/schemas/index.js",
+      "types": "./dist/types/schemas/index.d.ts"
+    },
+    "./clabe": {
+      "import": "./dist/esm/clabe/index.js",
+      "require": "./dist/cjs/clabe/index.js",
+      "types": "./dist/types/clabe/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "npm run build:esm && npm run build:cjs && npm run build:types",
+    "build:esm": "tsc -p tsconfig.build.json --module ESNext --moduleResolution node --outDir dist/esm",
+    "build:cjs": "tsc -p tsconfig.build.json --module CommonJS --moduleResolution node --outDir dist/cjs",
+    "build:types": "tsc -p tsconfig.build.json --declaration --emitDeclarationOnly --outDir dist/types",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "zod": "^4.3.6"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
+  }
+}
