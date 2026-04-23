@@ -1,11 +1,12 @@
 import { z } from "zod"
 import { zStr } from "../helpers"
+import { SEXO } from "../enums/sexo"
 
 export const paso1Schema = z.object({
   nombre: zStr().min(2, "Mínimo 2 caracteres"),
   apellidoPaterno: zStr().min(2, "Mínimo 2 caracteres"),
   apellidoMaterno: zStr().min(2, "Mínimo 2 caracteres"),
-  sexo: z.enum(["M", "F", "X"], { error: () => "Selecciona una opción" }),
+  sexo: z.enum(SEXO, { error: () => "Selecciona una opción" }),
   fechaNacimiento: zStr("Selecciona una fecha")
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Formato inválido")
     .refine((val) => {
@@ -21,8 +22,13 @@ export const paso1Schema = z.object({
       /^[A-Z][AEIOUX][A-Z]{2}\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])[HMX][A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}[A-Z\d]{2}$/,
       "Formato de CURP inválido"
     ),
-  email: z.string().email("Correo electrónico inválido"),
-  rfc: z.string().regex(/^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/, "Formato de RFC inválido").length(13, "El RFC debe tener exactamente 13 caracteres").optional(),
+  email: zStr().email({ error: "Correo electrónico inválido" }),
+  rfc: z
+    .string()
+    .trim()
+    .optional()
+    .refine((val) => !val || val.length === 13, "El RFC debe tener exactamente 13 caracteres")
+    .refine((val) => !val || /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/.test(val), "Formato de RFC inválido"),
   telefono: zStr()
     .regex(/^\d{10}$/, "El teléfono debe tener 10 dígitos"),
   codigoPostal: zStr()
@@ -31,7 +37,7 @@ export const paso1Schema = z.object({
   municipio: zStr().min(2, "Mínimo 2 caracteres"),
   calle: zStr().min(2, "Mínimo 2 caracteres"),
   numeroExterior: zStr("Campo requerido").min(1, "Campo requerido"),
-  numeroInterior: z.string().optional(),
+  numeroInterior: z.string().trim().optional(),
 })
 
 export type Paso1Data = z.infer<typeof paso1Schema>
