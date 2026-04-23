@@ -5,7 +5,7 @@ export const paso1Schema = z.object({
   nombre: zStr().min(2, "Mínimo 2 caracteres"),
   apellidoPaterno: zStr().min(2, "Mínimo 2 caracteres"),
   apellidoMaterno: zStr().min(2, "Mínimo 2 caracteres"),
-  sexo: z.enum(["M", "F", "ND"], { error: () => "Selecciona una opción" }),
+  sexo: z.enum(["M", "F", "X"], { error: () => "Selecciona una opción" }),
   fechaNacimiento: zStr("Selecciona una fecha")
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Formato inválido")
     .refine((val) => {
@@ -18,10 +18,11 @@ export const paso1Schema = z.object({
   curp: zStr()
     .length(18, "La CURP debe tener exactamente 18 caracteres")
     .regex(
-      /^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d$/,
+      /^[A-Z][AEIOUX][A-Z]{2}\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])[HMX][A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}[A-Z\d]{2}$/,
       "Formato de CURP inválido"
     ),
-  email: z.string().email("Correo electrónico inválido").optional().or(z.literal("")),
+  email: z.string().email("Correo electrónico inválido"),
+  rfc: z.string().regex(/^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/, "Formato de RFC inválido").length(13, "El RFC debe tener exactamente 13 caracteres").optional(),
   telefono: zStr()
     .regex(/^\d{10}$/, "El teléfono debe tener 10 dígitos"),
   codigoPostal: zStr()

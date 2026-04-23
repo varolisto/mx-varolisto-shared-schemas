@@ -1,6 +1,6 @@
 {
   "name": "@varolisto/shared-schemas",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Shared Zod schemas and CLABE utilities for Varolisto applications",
   "license": "UNLICENSED",
   "type": "module",
@@ -13,15 +13,30 @@
       "require": "./dist/cjs/index.js",
       "types": "./dist/types/index.d.ts"
     },
-    "./schemas": {
-      "import": "./dist/esm/schemas/index.js",
-      "require": "./dist/cjs/schemas/index.js",
-      "types": "./dist/types/schemas/index.d.ts"
+    "./form": {
+      "import": "./dist/esm/form/index.js",
+      "require": "./dist/cjs/form/index.js",
+      "types": "./dist/types/form/index.d.ts"
     },
-    "./clabe": {
-      "import": "./dist/esm/clabe/index.js",
-      "require": "./dist/cjs/clabe/index.js",
-      "types": "./dist/types/clabe/index.d.ts"
+    "./validators": {
+      "import": "./dist/esm/validators/index.js",
+      "require": "./dist/cjs/validators/index.js",
+      "types": "./dist/types/validators/index.d.ts"
+    },
+    "./enums": {
+      "import": "./dist/esm/enums/index.js",
+      "require": "./dist/cjs/enums/index.js",
+      "types": "./dist/types/enums/index.d.ts"
+    },
+    "./domain": {
+      "import": "./dist/esm/domain/index.js",
+      "require": "./dist/cjs/domain/index.js",
+      "types": "./dist/types/domain/index.d.ts"
+    },
+    "./api": {
+      "import": "./dist/esm/api/index.js",
+      "require": "./dist/cjs/api/index.js",
+      "types": "./dist/types/api/index.d.ts"
     }
   },
   "files": [

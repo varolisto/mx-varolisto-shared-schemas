@@ -1,0 +1,7 @@
+export * from "./solicitante"
+export * from "./solicitud"
+export * from "./ingreso"
+export * from "./referencia"
+export * from "./scoring"
+export * from "./prestamo"
+export * from "./pago"

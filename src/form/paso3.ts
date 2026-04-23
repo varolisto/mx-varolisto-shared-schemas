@@ -21,7 +21,7 @@ export const paso3Schema = z
       .number({ error: () => "Ingresa un ingreso válido" })
       .min(1000, "Mínimo $1,000"),
     tieneDeudas: z.enum(["si", "no"], { error: () => "Selecciona una opción" }),
-    cantidadDeudas: z.enum(["1", "2", "3_o_mas"]).optional(),
+    cantidadDeudas: z.enum(["sin_deudas", "una_deuda", "dos_deudas", "tres_o_mas"]).optional(),
     montoTotalDeudas: z
       .enum(["menos_5k", "5k_15k", "15k_30k", "mas_30k"])
       .optional(),

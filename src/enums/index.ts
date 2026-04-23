@@ -1,0 +1,7 @@
+export * from "./tipoActividad"
+export * from "./estadoSolicitud"
+export * from "./estadoPrestamo"
+export * from "./perfilRiesgo"
+export * from "./tipoArchivo"
+export * from "./tipoPago"
+export * from "./tipoAjuste"
