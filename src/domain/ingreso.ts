@@ -1,6 +1,15 @@
 import { z } from "zod"
+import { TIPO_ACTIVIDAD } from "../enums/tipoActividad"
+import { CANTIDAD_DEUDAS } from "../enums/cantidadDeudas"
 
-// TODO: definir schema de ingreso del solicitante
-export const ingresoSchema = z.object({})
+export const ingresoDomainSchema = z.object({
+  tipoActividad: z.enum(TIPO_ACTIVIDAD),
+  empleador: z.string().max(120),
+  antiguedadMeses: z.number().int().min(0),
+  ingresoMensual: z.number().min(0),
+  tieneDeudas: z.boolean(),
+  rangoDeudas: z.enum(CANTIDAD_DEUDAS).nullable(),
+  pagoMensualDeudas: z.number().min(0).nullable(),
+})
 
-export type Ingreso = z.infer<typeof ingresoSchema>
+export type IngresoDomain = z.infer<typeof ingresoDomainSchema>

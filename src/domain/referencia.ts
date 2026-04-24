@@ -1,6 +1,13 @@
 import { z } from "zod"
+import { RELACION_REFERENCIA } from "../enums/relacionReferencia"
 
-// TODO: definir schema de referencia personal
-export const referenciaSchema = z.object({})
+export const referenciaDomainSchema = z.object({
+  nombre: z.string().max(160),
+  telefono: z.string().length(10),
+  relacion: z.enum(RELACION_REFERENCIA),
+  confirmada: z.boolean().default(false),
+  confirmadaAt: z.coerce.date().nullable().optional(),
+  notaConfirmacion: z.string().nullable().optional(),
+})
 
-export type Referencia = z.infer<typeof referenciaSchema>
+export type ReferenciaDomain = z.infer<typeof referenciaDomainSchema>
