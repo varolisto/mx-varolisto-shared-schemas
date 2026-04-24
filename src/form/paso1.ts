@@ -1,6 +1,9 @@
 import { z } from "zod"
 import { zStr } from "../helpers"
 import { SEXO } from "../enums/sexo"
+import { isValidRfc } from "../validators/rfc"
+import { isValidCurp } from "../validators/curp"
+import { isValidTelefonoMx } from "../validators/telefonoMx"
 
 export const paso1Schema = z.object({
   nombre: zStr().min(2, "Mínimo 2 caracteres"),
@@ -18,19 +21,22 @@ export const paso1Schema = z.object({
     }, "Debes tener al menos 18 años"),
   curp: zStr()
     .length(18, "La CURP debe tener exactamente 18 caracteres")
-    .regex(
-      /^[A-Z][AEIOUX][A-Z]{2}\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])[HMX][A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}[A-Z\d]{2}$/,
-      "Formato de CURP inválido"
-    ),
+    .refine((val) => val.length !== 18 || isValidCurp(val), "Formato de CURP inválido"),
   email: zStr().email({ error: "Correo electrónico inválido" }),
   rfc: z
     .string()
     .trim()
     .optional()
-    .refine((val) => !val || val.length === 13, "El RFC debe tener exactamente 13 caracteres")
-    .refine((val) => !val || /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/.test(val), "Formato de RFC inválido"),
+    .refine(
+      (val) => !val || val.length === 12 || val.length === 13,
+      "El RFC debe tener 12 o 13 caracteres"
+    )
+    .refine(
+      (val) => !val || (val.length !== 12 && val.length !== 13) || isValidRfc(val),
+      "Formato de RFC inválido"
+    ),
   telefono: zStr()
-    .regex(/^\d{10}$/, "El teléfono debe tener 10 dígitos"),
+    .refine((val) => val.length < 1 || isValidTelefonoMx(val), "Ingresa un teléfono válido de 10 dígitos"),
   codigoPostal: zStr()
     .regex(/^\d{5}$/, "El CP debe tener 5 dígitos"),
   colonia: zStr("Selecciona una colonia").min(1, "Selecciona una colonia"),

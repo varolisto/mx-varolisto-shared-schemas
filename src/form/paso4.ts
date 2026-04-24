@@ -1,12 +1,13 @@
 import { z } from "zod"
 import { zStr } from "../helpers"
 import { RELACION_REFERENCIA } from "../enums/relacionReferencia"
+import { isValidTelefonoMx } from "../validators/telefonoMx"
 
 export const paso4Schema = z
   .object({
     ref1Nombre: zStr().min(2, "Mínimo 2 caracteres").max(100, "Máximo 100 caracteres").regex(/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s'-]+$/, "Solo se permiten letras"),
     ref1Telefono: zStr()
-      .regex(/^\d{10}$/, "El teléfono debe tener 10 dígitos"),
+      .refine(isValidTelefonoMx, "Ingresa un teléfono válido de 10 dígitos"),
     ref1Relacion: z.enum(RELACION_REFERENCIA, {
       error: () => "Selecciona una relación",
     }),
@@ -18,7 +19,7 @@ export const paso4Schema = z
       .or(z.literal("")),
     ref2Nombre: zStr().min(2, "Mínimo 2 caracteres").max(100, "Máximo 100 caracteres").regex(/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s'-]+$/, "Solo se permiten letras"),
     ref2Telefono: zStr()
-      .regex(/^\d{10}$/, "El teléfono debe tener 10 dígitos"),
+      .refine(isValidTelefonoMx, "Ingresa un teléfono válido de 10 dígitos"),
     ref2Relacion: z.enum(RELACION_REFERENCIA, {
       error: () => "Selecciona una relación",
     }),
