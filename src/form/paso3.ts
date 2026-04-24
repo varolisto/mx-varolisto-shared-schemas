@@ -1,9 +1,9 @@
 import { z } from "zod"
-import { zStr } from "../helpers"
-import { TIPO_ACTIVIDAD } from "../enums/tipoActividad"
-import { ANTIGUEDAD } from "../enums/antiguedad"
-import { CANTIDAD_DEUDAS } from "../enums/cantidadDeudas"
-import { MONTO_TOTAL_DEUDAS } from "../enums/montoTotalDeudas"
+import { zStr } from "../helpers.js"
+import { TIPO_ACTIVIDAD } from "../enums/tipoActividad.js"
+import { ANTIGUEDAD } from "../enums/antiguedad.js"
+import { CANTIDAD_DEUDAS } from "../enums/cantidadDeudas.js"
+import { MONTO_TOTAL_DEUDAS } from "../enums/montoTotalDeudas.js"
 
 export const paso3Schema = z
   .object({

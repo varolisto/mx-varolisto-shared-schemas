@@ -1,6 +1,6 @@
 import { z } from "zod"
-import { zStr } from "../helpers"
-import { validateClabe } from "../validators/clabe"
+import { zStr } from "../helpers.js"
+import { validateClabe } from "../validators/clabe.js"
 
 export const ACCEPTED_MIME_TYPES = ["image/jpeg", "image/png", "application/pdf"] as const
 export const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024
