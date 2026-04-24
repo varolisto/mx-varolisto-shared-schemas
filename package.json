@@ -1,6 +1,6 @@
 {
   "name": "@varolisto/shared-schemas",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Shared Zod schemas and CLABE utilities for Varolisto applications",
   "license": "UNLICENSED",
   "type": "module",
@@ -45,7 +45,7 @@
   ],
   "scripts": {
     "build": "npm run build:esm && npm run build:cjs && npm run build:types",
-    "build:esm": "tsc -p tsconfig.build.json --module ESNext --moduleResolution node --outDir dist/esm",
+    "build:esm": "tsc -p tsconfig.build.json --module NodeNext --outDir dist/esm",
     "build:cjs": "tsc -p tsconfig.build.json --module CommonJS --moduleResolution node --outDir dist/cjs",
     "build:types": "tsc -p tsconfig.build.json --declaration --emitDeclarationOnly --outDir dist/types",
     "clean": "rm -rf dist",

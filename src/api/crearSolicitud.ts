@@ -1,6 +1,6 @@
 import { z } from "zod"
-import { solicitudSchema } from "../form"
-import { ESTADO_SOLICITUD } from "../enums/estadoSolicitud"
+import { solicitudSchema } from "../form/index.js"
+import { ESTADO_SOLICITUD } from "../enums/estadoSolicitud.js"
 
 /**
  * Schema del request del endpoint POST /api/solicitudes.
