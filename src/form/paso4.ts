@@ -1,7 +1,7 @@
 import { z } from "zod"
-import { zStr } from "../helpers"
-import { RELACION_REFERENCIA } from "../enums/relacionReferencia"
-import { isValidTelefonoMx } from "../validators/telefonoMx"
+import { zStr } from "../helpers.js"
+import { RELACION_REFERENCIA } from "../enums/relacionReferencia.js"
+import { isValidTelefonoMx } from "../validators/telefonoMx.js"
 
 export const paso4Schema = z
   .object({
