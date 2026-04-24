@@ -11,7 +11,6 @@ export const paso5Schema = z.object({
     .min(2, "Se requieren al menos 2 comprobantes")
     .max(5, "Máximo 5 comprobantes"),
   clabe: zStr()
-    .regex(/^\d{18}$/, "La CLABE debe tener 18 dígitos")
     .refine(validateClabe, "CLABE inválida. Verifica que no sea el número de tu tarjeta."),
 })
 

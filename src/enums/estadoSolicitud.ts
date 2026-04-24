@@ -1,4 +1,10 @@
-// TODO: definir estados del ciclo de vida de una solicitud
-export const ESTADO_SOLICITUD = [] as const
+export const ESTADO_SOLICITUD = [
+  "recibida",
+  "en_revision",
+  "pendiente_info",
+  "aprobada",
+  "rechazada",
+  "cancelada",
+] as const
 
 export type EstadoSolicitud = typeof ESTADO_SOLICITUD[number]
