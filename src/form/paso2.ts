@@ -1,6 +1,6 @@
 import { z } from "zod"
-import { PLAZO_MESES } from "../enums/plazoMeses"
-import { DESTINO_PRESTAMO } from "../enums/destinoPrestamo"
+import { PLAZO_MESES } from "../enums/plazoMeses.js"
+import { DESTINO_PRESTAMO } from "../enums/destinoPrestamo.js"
 
 export const paso2Schema = z
   .object({

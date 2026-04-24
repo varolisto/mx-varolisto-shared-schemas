@@ -1,6 +1,6 @@
 import { z } from "zod"
-import { TIPO_ARCHIVO } from "../enums/tipoArchivo"
-import { ORIGEN_ARCHIVO } from "../enums/origenArchivo"
+import { TIPO_ARCHIVO } from "../enums/tipoArchivo.js"
+import { ORIGEN_ARCHIVO } from "../enums/origenArchivo.js"
 
 export const archivoDomainSchema = z.object({
   tipoArchivo: z.enum(TIPO_ARCHIVO),

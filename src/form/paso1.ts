@@ -1,9 +1,9 @@
 import { z } from "zod"
-import { zStr } from "../helpers"
-import { SEXO } from "../enums/sexo"
-import { isValidRfc } from "../validators/rfc"
-import { isValidCurp } from "../validators/curp"
-import { isValidTelefonoMx } from "../validators/telefonoMx"
+import { zStr } from "../helpers.js"
+import { SEXO } from "../enums/sexo.js"
+import { isValidRfc } from "../validators/rfc.js"
+import { isValidCurp } from "../validators/curp.js"
+import { isValidTelefonoMx } from "../validators/telefonoMx.js"
 
 export const paso1Schema = z.object({
   nombre: zStr().min(2, "Mínimo 2 caracteres"),
