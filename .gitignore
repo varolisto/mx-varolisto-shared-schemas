@@ -1,3 +1,7 @@
 node_modules/
 dist/
 *.tsbuildinfo
+
+# Lockfiles de package managers no soportados
+package-lock.json
+yarn.lock
