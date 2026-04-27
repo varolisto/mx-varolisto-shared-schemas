@@ -1,6 +1,6 @@
 {
   "name": "@varolisto/shared-schemas",
-  "version": "0.3.2",
+  "version": "0.5.0",
   "description": "Shared Zod schemas and CLABE utilities for Varolisto applications",
   "license": "UNLICENSED",
   "type": "module",
@@ -37,6 +37,11 @@
       "import": "./dist/esm/api/index.js",
       "require": "./dist/cjs/api/index.js",
       "types": "./dist/types/api/index.d.ts"
+    },
+    "./admin": {
+      "import": "./dist/esm/admin/index.js",
+      "require": "./dist/cjs/admin/index.js",
+      "types": "./dist/types/admin/index.d.ts"
     }
   },
   "files": [
