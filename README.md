@@ -216,13 +216,40 @@ const schema = z.object({ nombre: zStr("Nombre requerido") })
 
 ## Publicación
 
-Se publica automáticamente en GitHub Packages al crear un tag `v*`:
+Este paquete usa [Changesets](https://github.com/changesets/changesets) para
+gestionar el versionado y la publicación a GitHub Packages.
 
-```bash
-# Actualizar versión en package.json, luego:
-git tag v0.3.0
-git push origin v0.3.0
-```
+### Flujo de cambios
+
+1. Realiza tu cambio en una branch de feature (`feature/...`).
+2. Antes de abrir el PR, declara el cambio:
+   ```bash
+   pnpm changeset
+   ```
+   Selecciona el tipo de bump (patch / minor / major) y describe el cambio.
+   Esto crea un archivo en `.changeset/` que se commitea junto con tu PR.
+
+3. Abre el PR a `main` (vía `sandbox` si sigues ese flujo).
+
+### Flujo de release (automático)
+
+Cuando un PR con archivos de changeset se mergea a `main`:
+
+1. La GitHub Action `release.yml` detecta los archivos de changeset.
+2. La Action crea automáticamente un PR titulado `chore: release packages`
+   que: actualiza `version` en `package.json`, actualiza `CHANGELOG.md`,
+   y elimina los archivos de changeset consumidos.
+3. Revisa ese PR. Al mergearlo a `main`:
+4. La Action publica automáticamente el paquete a GitHub Packages.
+
+No es necesario crear tags manualmente ni hacer push de tags.
+La Action se encarga de todo a partir del merge a `main`.
+
+### Bumping manual (excepción)
+
+Si necesitas bumpear sin usar changesets (caso raro, p. ej. un hotfix urgente),
+sigue el flujo manual histórico documentado en commits previos. Esto debe ser
+excepcional.
 
 ## Requisitos
 
