@@ -1,9 +1,20 @@
-name: Publish Package
+# ============================================================
+# WORKFLOW DEPRECADO — Reemplazado por release.yml + Changesets
+# ============================================================
+# Este workflow se conserva por trazabilidad. Su trigger fue
+# cambiado a workflow_dispatch para evitar ejecuciones
+# accidentales. NO publica via push de tag.
+#
+# Para releases nuevos: usar `pnpm changeset` (ver README).
+# ============================================================
+
+name: Release (Manual - DEPRECATED)
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
+    # Workflow deprecado tras adopcion de Changesets (Sprint 1, abr 2026).
+    # Conservado solo por trazabilidad historica. NO USAR salvo emergencia.
+    # Si necesitas un release de emergencia, contacta al CEO antes.
 
 jobs:
   publish:
