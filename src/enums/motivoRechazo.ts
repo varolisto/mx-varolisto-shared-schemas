@@ -3,6 +3,7 @@ export const MOTIVO_RECHAZO = [
   "cuota_ingreso_excesiva",
   "referencias_no_confirmadas",
   "inconsistencia_documental",
+  "fraude_detectado",
   "otro",
 ] as const
 
