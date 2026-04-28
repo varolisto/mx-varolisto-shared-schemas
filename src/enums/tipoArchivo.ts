@@ -2,6 +2,7 @@ export const TIPO_ARCHIVO = [
   "comprobante_ingreso",
   "ine_frente",
   "ine_reverso",
+  "pasaporte_principal",
   "comprobante_domicilio",
   "propuesta_pdf",
   "pagare_pdf",

@@ -37,13 +37,6 @@ export const paso1Schema = z.object({
     ),
   telefono: zStr()
     .refine((val) => val.length < 1 || isValidTelefonoMx(val), "Ingresa un teléfono válido de 10 dígitos"),
-  codigoPostal: zStr()
-    .regex(/^\d{5}$/, "El CP debe tener 5 dígitos"),
-  colonia: zStr("Selecciona una colonia").min(1, "Selecciona una colonia"),
-  municipio: zStr().min(2, "Mínimo 2 caracteres"),
-  calle: zStr().min(2, "Mínimo 2 caracteres"),
-  numeroExterior: zStr("Campo requerido").min(1, "Campo requerido"),
-  numeroInterior: z.string().trim().optional(),
 })
 
 export type Paso1Data = z.infer<typeof paso1Schema>

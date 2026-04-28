@@ -17,7 +17,6 @@ const solicitudCompletaSchema = z.object({
   montoSolicitado: z.number(),
   plazoMeses: z.number().int(),
   destino: z.enum(DESTINO_PRESTAMO),
-  destinoOtro: z.string().nullable(),
   esPrimerCredito: z.boolean(),
   estado: z.enum(ESTADO_SOLICITUD),
   motivoRechazo: z.enum(MOTIVO_RECHAZO).nullable(),

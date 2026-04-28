@@ -1,46 +1,18 @@
 import { z } from "zod"
 import { zStr } from "../helpers.js"
-import { TIPO_ACTIVIDAD } from "../enums/tipoActividad.js"
-import { ANTIGUEDAD } from "../enums/antiguedad.js"
-import { CANTIDAD_DEUDAS } from "../enums/cantidadDeudas.js"
-import { MONTO_TOTAL_DEUDAS } from "../enums/montoTotalDeudas.js"
+import { ANIOS_VIVIENDO } from "../enums/aniosViviendo.js"
+import { TIPO_VIVIENDA } from "../enums/tipoVivienda.js"
 
-export const paso3Schema = z
-  .object({
-    tipoActividad: z.enum(TIPO_ACTIVIDAD, { error: () => "Selecciona una opción" }),
-    nombreEmpleadorNegocio: zStr().min(2, "Mínimo 2 caracteres"),
-    antiguedad: z.enum(ANTIGUEDAD, { error: () => "Selecciona una opción" }),
-    ingresoMensual: z
-      .number({ error: () => "Ingresa un ingreso válido" })
-      .min(1000, "Mínimo $1,000"),
-    tieneDeudas: z.enum(["si", "no"], { error: () => "Selecciona una opción" }),
-    cantidadDeudas: z.enum(CANTIDAD_DEUDAS).optional(),
-    montoTotalDeudas: z.enum(MONTO_TOTAL_DEUDAS).optional(),
-    pagoMensualDeudas: z.number().min(0).optional(),
-  })
-  .refine(
-    (data) =>
-      data.tieneDeudas !== "si" || data.cantidadDeudas !== undefined,
-    {
-      message: "Indica cuántas deudas tienes",
-      path: ["cantidadDeudas"],
-    }
-  )
-  .refine(
-    (data) =>
-      data.tieneDeudas !== "si" || data.montoTotalDeudas !== undefined,
-    {
-      message: "Indica el monto total de tus deudas",
-      path: ["montoTotalDeudas"],
-    }
-  )
-  .refine(
-    (data) =>
-      data.tieneDeudas !== "si" || data.pagoMensualDeudas !== undefined,
-    {
-      message: "Indica tu pago mensual",
-      path: ["pagoMensualDeudas"],
-    }
-  )
+export const paso3Schema = z.object({
+  codigoPostal: zStr()
+    .regex(/^\d{5}$/, "El CP debe tener 5 dígitos"),
+  colonia: zStr("Selecciona una colonia").min(1, "Selecciona una colonia"),
+  municipio: zStr().min(2, "Mínimo 2 caracteres"),
+  calle: zStr().min(2, "Mínimo 2 caracteres"),
+  numeroExterior: zStr("Campo requerido").min(1, "Campo requerido"),
+  numeroInterior: z.string().trim().optional(),
+  aniosViviendo: z.enum(ANIOS_VIVIENDO, { error: () => "Selecciona una opción" }),
+  tipoVivienda: z.enum(TIPO_VIVIENDA, { error: () => "Selecciona una opción" }),
+})
 
 export type Paso3Data = z.infer<typeof paso3Schema>
