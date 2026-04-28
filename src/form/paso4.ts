@@ -1,38 +1,50 @@
 import { z } from "zod"
 import { zStr } from "../helpers.js"
-import { RELACION_REFERENCIA } from "../enums/relacionReferencia.js"
-import { isValidTelefonoMx } from "../validators/telefonoMx.js"
+import { TIPO_ACTIVIDAD } from "../enums/tipoActividad.js"
+import { ANTIGUEDAD } from "../enums/antiguedad.js"
+import { CANTIDAD_DEUDAS } from "../enums/cantidadDeudas.js"
+import { MONTO_TOTAL_DEUDAS } from "../enums/montoTotalDeudas.js"
+import { ESTADO_CIVIL } from "../enums/estadoCivil.js"
+import { DEPENDIENTES_ECONOMICOS } from "../enums/dependientesEconomicos.js"
 
 export const paso4Schema = z
   .object({
-    ref1Nombre: zStr().min(2, "Mínimo 2 caracteres").max(100, "Máximo 100 caracteres").regex(/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s'-]+$/, "Solo se permiten letras"),
-    ref1Telefono: zStr()
-      .refine(isValidTelefonoMx, "Ingresa un teléfono válido de 10 dígitos"),
-    ref1Relacion: z.enum(RELACION_REFERENCIA, {
-      error: () => "Selecciona una relación",
-    }),
-    ref1Email: z
-      .string()
-      .max(100, "Máximo 100 caracteres")
-      .email("Correo inválido")
-      .optional()
-      .or(z.literal("")),
-    ref2Nombre: zStr().min(2, "Mínimo 2 caracteres").max(100, "Máximo 100 caracteres").regex(/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s'-]+$/, "Solo se permiten letras"),
-    ref2Telefono: zStr()
-      .refine(isValidTelefonoMx, "Ingresa un teléfono válido de 10 dígitos"),
-    ref2Relacion: z.enum(RELACION_REFERENCIA, {
-      error: () => "Selecciona una relación",
-    }),
-    ref2Email: z
-      .string()
-      .max(100, "Máximo 100 caracteres")
-      .email("Correo inválido")
-      .optional()
-      .or(z.literal("")),
+    tipoActividad: z.enum(TIPO_ACTIVIDAD, { error: () => "Selecciona una opción" }),
+    nombreEmpleadorNegocio: zStr().min(2, "Mínimo 2 caracteres"),
+    antiguedad: z.enum(ANTIGUEDAD, { error: () => "Selecciona una opción" }),
+    estadoCivil: z.enum(ESTADO_CIVIL, { error: () => "Selecciona una opción" }),
+    dependientesEconomicos: z.enum(DEPENDIENTES_ECONOMICOS, { error: () => "Selecciona una opción" }),
+    ingresoMensual: z
+      .number({ error: () => "Ingresa un ingreso válido" })
+      .min(1000, "Mínimo $1,000"),
+    tieneDeudas: z.enum(["si", "no"], { error: () => "Selecciona una opción" }),
+    cantidadDeudas: z.enum(CANTIDAD_DEUDAS).optional(),
+    montoTotalDeudas: z.enum(MONTO_TOTAL_DEUDAS).optional(),
+    pagoMensualDeudas: z.number().min(0).optional(),
   })
-  .refine((data) => data.ref1Telefono !== data.ref2Telefono, {
-    message: "El teléfono de la segunda referencia no puede ser igual al primero",
-    path: ["ref2Telefono"],
-  })
+  .refine(
+    (data) =>
+      data.tieneDeudas !== "si" || data.cantidadDeudas !== undefined,
+    {
+      message: "Indica cuántas deudas tienes",
+      path: ["cantidadDeudas"],
+    }
+  )
+  .refine(
+    (data) =>
+      data.tieneDeudas !== "si" || data.montoTotalDeudas !== undefined,
+    {
+      message: "Indica el monto total de tus deudas",
+      path: ["montoTotalDeudas"],
+    }
+  )
+  .refine(
+    (data) =>
+      data.tieneDeudas !== "si" || data.pagoMensualDeudas !== undefined,
+    {
+      message: "Indica tu pago mensual",
+      path: ["pagoMensualDeudas"],
+    }
+  )
 
 export type Paso4Data = z.infer<typeof paso4Schema>

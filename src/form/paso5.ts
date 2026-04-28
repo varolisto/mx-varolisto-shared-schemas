@@ -1,28 +1,38 @@
 import { z } from "zod"
 import { zStr } from "../helpers.js"
-import { validateClabe } from "../validators/clabe.js"
-import { TIPO_ARCHIVO } from "../enums/tipoArchivo.js"
+import { RELACION_REFERENCIA } from "../enums/relacionReferencia.js"
+import { isValidTelefonoMx } from "../validators/telefonoMx.js"
 
-export const ACCEPTED_MIME_TYPES = ["image/jpeg", "image/png", "application/pdf"] as const
-export const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024
-
-export const archivoDeclaradoSchema = z.object({
-  tipoArchivo: z.enum(TIPO_ARCHIVO),
-  nombreOriginal: z.string().min(1, "Nombre de archivo inválido").max(255),
-  mimeType: z.string().min(1),
-  tamanoBytes: z.number().int().positive(),
-})
-
-export type ArchivoDeclarado = z.infer<typeof archivoDeclaradoSchema>
-
-export const paso5Schema = z.object({
-  sessionUuid: z.uuid("sessionUuid debe ser un UUID válido"),
-  archivosDeclarados: z
-    .array(archivoDeclaradoSchema)
-    .min(1, "Se requiere al menos 1 archivo")
-    .max(5, "Máximo 5 archivos"),
-  clabe: zStr()
-    .refine(validateClabe, "CLABE inválida. Verifica que no sea el número de tu tarjeta."),
-})
+export const paso5Schema = z
+  .object({
+    ref1Nombre: zStr().min(2, "Mínimo 2 caracteres").max(100, "Máximo 100 caracteres").regex(/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s'-]+$/, "Solo se permiten letras"),
+    ref1Telefono: zStr()
+      .refine(isValidTelefonoMx, "Ingresa un teléfono válido de 10 dígitos"),
+    ref1Relacion: z.enum(RELACION_REFERENCIA, {
+      error: () => "Selecciona una relación",
+    }),
+    ref1Email: z
+      .string()
+      .max(100, "Máximo 100 caracteres")
+      .email("Correo inválido")
+      .optional()
+      .or(z.literal("")),
+    ref2Nombre: zStr().min(2, "Mínimo 2 caracteres").max(100, "Máximo 100 caracteres").regex(/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s'-]+$/, "Solo se permiten letras"),
+    ref2Telefono: zStr()
+      .refine(isValidTelefonoMx, "Ingresa un teléfono válido de 10 dígitos"),
+    ref2Relacion: z.enum(RELACION_REFERENCIA, {
+      error: () => "Selecciona una relación",
+    }),
+    ref2Email: z
+      .string()
+      .max(100, "Máximo 100 caracteres")
+      .email("Correo inválido")
+      .optional()
+      .or(z.literal("")),
+  })
+  .refine((data) => data.ref1Telefono !== data.ref2Telefono, {
+    message: "El teléfono de la segunda referencia no puede ser igual al primero",
+    path: ["ref2Telefono"],
+  })
 
 export type Paso5Data = z.infer<typeof paso5Schema>
