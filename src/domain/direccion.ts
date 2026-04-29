@@ -8,6 +8,7 @@ export const direccionDomainSchema = z.object({
   colonia: z.string().max(120),
   municipio: z.string().max(120),
   estado: z.string().max(60),
+  ciudad: z.string().max(120).nullable(),
   esVigente: z.boolean().default(true),
 })
 

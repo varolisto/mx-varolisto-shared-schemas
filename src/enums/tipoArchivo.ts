@@ -8,6 +8,7 @@ export const TIPO_ARCHIVO = [
   "pagare_pdf",
   "contrato_pdf",
   "comprobante_liquidacion_pdf",
+  "comprobante_desembolso_pdf",
   "otro",
 ] as const
 
