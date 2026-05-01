@@ -13,12 +13,17 @@ export const paso1Schema = z.object({
   fechaNacimiento: zStr("Selecciona una fecha")
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Formato inválido")
     .refine((val) => {
-      const birth = new Date(val)
-      const today = new Date()
-      const age = today.getFullYear() - birth.getFullYear()
-      const m = today.getMonth() - birth.getMonth()
-      return age > 18 || (age === 18 && m >= 0)
-    }, "Debes tener al menos 18 años"),
+      const birth = new Date(val + "T00:00:00")
+      const min18 = new Date()
+      min18.setFullYear(min18.getFullYear() - 18)
+      return birth <= min18
+    }, "Debes tener al menos 18 años")
+    .refine((val) => {
+      const birth = new Date(val + "T00:00:00")
+      const max100 = new Date()
+      max100.setFullYear(max100.getFullYear() - 100)
+      return birth >= max100
+    }, "Fecha de nacimiento inválida"),
   curp: zStr()
     .length(18, "La CURP debe tener exactamente 18 caracteres")
     .refine((val) => val.length !== 18 || isValidCurp(val), "Formato de CURP inválido"),
