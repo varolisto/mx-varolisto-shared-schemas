@@ -1,7 +1,7 @@
 {
   "name": "@varolisto/shared-schemas",
   "packageManager": "pnpm@10.26.0",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Shared Zod schemas and CLABE utilities for Varolisto applications",
   "license": "UNLICENSED",
   "type": "module",
