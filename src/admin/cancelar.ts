@@ -1,5 +1,5 @@
-import { z } from "zod"
-import { MOTIVO_CANCELACION } from "../enums/motivoCancelacion.js"
+import { z } from 'zod'
+import { MOTIVO_CANCELACION } from '../enums/motivoCancelacion.js'
 
 export const cancelarRequestSchema = z.object({
   motivo: z.enum(MOTIVO_CANCELACION),

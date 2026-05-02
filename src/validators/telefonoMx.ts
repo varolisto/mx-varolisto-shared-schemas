@@ -12,27 +12,22 @@ export type TelefonoMxValidationResult =
   | { valid: true; normalized: string }
   | {
       valid: false
-      reason:
-        | "tipo_incorrecto"
-        | "longitud_incorrecta"
-        | "formato_invalido"
+      reason: 'tipo_incorrecto' | 'longitud_incorrecta' | 'formato_invalido'
     }
 
-export function validateTelefonoMx(
-  telefono: string,
-): TelefonoMxValidationResult {
-  if (typeof telefono !== "string") {
-    return { valid: false, reason: "tipo_incorrecto" }
+export function validateTelefonoMx(telefono: string): TelefonoMxValidationResult {
+  if (typeof telefono !== 'string') {
+    return { valid: false, reason: 'tipo_incorrecto' }
   }
 
-  const cleaned = telefono.replace(/[\s\-()\+]/g, "")
+  const cleaned = telefono.replace(/[\s\-()+]/g, '')
 
   if (cleaned.length !== 10) {
-    return { valid: false, reason: "longitud_incorrecta" }
+    return { valid: false, reason: 'longitud_incorrecta' }
   }
 
   if (!TELEFONO_MX_REGEX.test(cleaned)) {
-    return { valid: false, reason: "formato_invalido" }
+    return { valid: false, reason: 'formato_invalido' }
   }
 
   return { valid: true, normalized: cleaned }

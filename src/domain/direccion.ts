@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from 'zod'
 
 export const direccionDomainSchema = z.object({
   calle: z.string().max(120),

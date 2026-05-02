@@ -1,15 +1,15 @@
-import { z } from "zod"
-import { ESTADO_SOLICITUD } from "../enums/estadoSolicitud.js"
-import { MOTIVO_RECHAZO } from "../enums/motivoRechazo.js"
-import { MOTIVO_CANCELACION } from "../enums/motivoCancelacion.js"
-import { DESTINO_PRESTAMO } from "../enums/destinoPrestamo.js"
-import { SEXO } from "../enums/sexo.js"
-import { TIPO_ACTIVIDAD } from "../enums/tipoActividad.js"
-import { CANTIDAD_DEUDAS } from "../enums/cantidadDeudas.js"
-import { RELACION_REFERENCIA } from "../enums/relacionReferencia.js"
-import { TIPO_ARCHIVO } from "../enums/tipoArchivo.js"
-import { ORIGEN_ARCHIVO } from "../enums/origenArchivo.js"
-import { PERFIL_RIESGO } from "../enums/perfilRiesgo.js"
+import { z } from 'zod'
+import { CANTIDAD_DEUDAS } from '../enums/cantidadDeudas.js'
+import { DESTINO_PRESTAMO } from '../enums/destinoPrestamo.js'
+import { ESTADO_SOLICITUD } from '../enums/estadoSolicitud.js'
+import { MOTIVO_CANCELACION } from '../enums/motivoCancelacion.js'
+import { MOTIVO_RECHAZO } from '../enums/motivoRechazo.js'
+import { ORIGEN_ARCHIVO } from '../enums/origenArchivo.js'
+import { PERFIL_RIESGO } from '../enums/perfilRiesgo.js'
+import { RELACION_REFERENCIA } from '../enums/relacionReferencia.js'
+import { SEXO } from '../enums/sexo.js'
+import { TIPO_ACTIVIDAD } from '../enums/tipoActividad.js'
+import { TIPO_ARCHIVO } from '../enums/tipoArchivo.js'
 
 const solicitudCompletaSchema = z.object({
   id: z.string().uuid(),

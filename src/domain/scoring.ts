@@ -1,5 +1,5 @@
-import { z } from "zod"
-import { PERFIL_RIESGO } from "../enums/perfilRiesgo.js"
+import { z } from 'zod'
+import { PERFIL_RIESGO } from '../enums/perfilRiesgo.js'
 
 /**
  * Variables automatizables al crear la solicitud: V2, V3, V4, V6, V8.

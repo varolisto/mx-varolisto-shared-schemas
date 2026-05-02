@@ -1,7 +1,7 @@
-import { z } from "zod"
-import { ESTADO_SOLICITUD } from "../enums/estadoSolicitud.js"
-import { DESTINO_PRESTAMO } from "../enums/destinoPrestamo.js"
-import { MOTIVO_RECHAZO } from "../enums/motivoRechazo.js"
+import { z } from 'zod'
+import { DESTINO_PRESTAMO } from '../enums/destinoPrestamo.js'
+import { ESTADO_SOLICITUD } from '../enums/estadoSolicitud.js'
+import { MOTIVO_RECHAZO } from '../enums/motivoRechazo.js'
 
 export const solicitudDomainSchema = z.object({
   folio: z.string().regex(/^VL-\d{6}-\d{4}$/),
@@ -10,7 +10,7 @@ export const solicitudDomainSchema = z.object({
   destino: z.enum(DESTINO_PRESTAMO),
   destinoOtro: z.string().nullable(),
   esPrimerCredito: z.boolean(),
-  estado: z.enum(ESTADO_SOLICITUD).default("recibida"),
+  estado: z.enum(ESTADO_SOLICITUD).default('recibida'),
   motivoRechazo: z.enum(MOTIVO_RECHAZO).nullable().optional(),
   notaOperador: z.string().nullable().optional(),
   metadata: z.record(z.string(), z.unknown()).default({}),

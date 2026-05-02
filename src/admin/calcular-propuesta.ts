@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from 'zod'
 
 export const calcularPropuestaRequestSchema = z.object({
   monto_aprobado: z.number().min(2000).max(20000),

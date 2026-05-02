@@ -19,29 +19,26 @@ export type CurpValidationResult =
   | { valid: true }
   | {
       valid: false
-      reason:
-        | "longitud_incorrecta"
-        | "caracteres_no_permitidos"
-        | "formato_invalido"
+      reason: 'longitud_incorrecta' | 'caracteres_no_permitidos' | 'formato_invalido'
     }
 
 export function validateCurp(curp: string): CurpValidationResult {
-  if (typeof curp !== "string") {
-    return { valid: false, reason: "caracteres_no_permitidos" }
+  if (typeof curp !== 'string') {
+    return { valid: false, reason: 'caracteres_no_permitidos' }
   }
 
   const normalized = curp.trim().toUpperCase()
 
   if (normalized.length !== 18) {
-    return { valid: false, reason: "longitud_incorrecta" }
+    return { valid: false, reason: 'longitud_incorrecta' }
   }
 
   if (!/^[A-Z0-9]{18}$/.test(normalized)) {
-    return { valid: false, reason: "caracteres_no_permitidos" }
+    return { valid: false, reason: 'caracteres_no_permitidos' }
   }
 
   if (!CURP_REGEX.test(normalized)) {
-    return { valid: false, reason: "formato_invalido" }
+    return { valid: false, reason: 'formato_invalido' }
   }
 
   return { valid: true }

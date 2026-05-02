@@ -1,5 +1,5 @@
-import { z } from "zod"
-import { RELACION_REFERENCIA } from "../enums/relacionReferencia.js"
+import { z } from 'zod'
+import { RELACION_REFERENCIA } from '../enums/relacionReferencia.js'
 
 export const referenciaDomainSchema = z.object({
   nombre: z.string().max(160),

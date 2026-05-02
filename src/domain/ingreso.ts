@@ -1,6 +1,6 @@
-import { z } from "zod"
-import { TIPO_ACTIVIDAD } from "../enums/tipoActividad.js"
-import { CANTIDAD_DEUDAS } from "../enums/cantidadDeudas.js"
+import { z } from 'zod'
+import { CANTIDAD_DEUDAS } from '../enums/cantidadDeudas.js'
+import { TIPO_ACTIVIDAD } from '../enums/tipoActividad.js'
 
 export const ingresoDomainSchema = z.object({
   tipoActividad: z.enum(TIPO_ACTIVIDAD),
