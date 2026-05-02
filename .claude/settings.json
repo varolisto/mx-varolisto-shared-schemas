@@ -1,0 +1,37 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/check-ports.sh" },
+          { "type": "command", "command": ".claude/hooks/block-manual-publish.sh" },
+          { "type": "command", "command": ".claude/hooks/block-pr-without-changeset.sh" },
+          { "type": "command", "command": ".claude/hooks/pre-commit-gate.sh" }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "input=$(cat); path=$(printf '%s' \"$input\" | jq -r '.tool_input.file_path // empty'); case \"$path\" in *src/enums/*.ts) printf '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"Cambio en src/enums/. Los enums son fuente de verdad: abre PR equivalente en mx-varolisto-api-backend/prisma/schema.prisma y crea la migración SQL correspondiente. Bump del paquete via `pnpm changeset`.\"}}\\n' ;; esac"
+          },
+          { "type": "command", "command": ".claude/hooks/check-changeset.sh" }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"Repo: mx-varolisto-shared-schemas (paquete @varolisto/shared-schemas en GitHub Packages). Reglas duras: (1) Versionado solo via Changesets (`pnpm changeset` -> PR -> release.yml). NO usar npm version / git tag / pnpm publish directo. (2) Imports relativos llevan `.js` (module: NodeNext). (3) Enums son fuente de verdad: cambiar uno implica PR equivalente en backend/prisma/schema.prisma. (4) Sin servidores: cualquier proceso aux usa >= 5000.\"}}\\n'"
+          }
+        ]
+      }
+    ]
+  }
+}
