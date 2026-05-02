@@ -23,42 +23,46 @@ npm install @varolisto/shared-schemas
 
 ```
 src/
-├── form/          # Schemas del formulario de solicitud (6 pasos)
+├── form/          # Schemas del formulario público de solicitud (7 pasos)
 ├── enums/         # Constantes de dominio (as const arrays + tipos)
 ├── validators/    # Validadores CLABE, CURP, RFC, teléfono mexicano
 ├── domain/        # Schemas del modelo de datos persistido
-├── api/           # Schemas de request/response de endpoints
+├── api/           # Schemas de request/response de endpoints públicos
+├── admin/         # Schemas de request/response de endpoints /api/admin/*
 └── helpers.ts     # Utilidad zStr()
 ```
 
 ## Entrypoints
 
-| Import                                  | Contenido                                   |
-| --------------------------------------- | ------------------------------------------- |
-| `@varolisto/shared-schemas`             | Re-exporta todo lo de abajo                 |
-| `@varolisto/shared-schemas/form`        | Schemas y tipos del formulario de solicitud |
-| `@varolisto/shared-schemas/enums`       | Constantes y tipos de enums de dominio      |
-| `@varolisto/shared-schemas/validators`  | Validadores CLABE, CURP, RFC, teléfono MX   |
-| `@varolisto/shared-schemas/domain`      | Schemas del modelo persistido               |
-| `@varolisto/shared-schemas/api`         | Schemas de endpoints REST                   |
+| Import                                  | Contenido                                                   |
+| --------------------------------------- | ----------------------------------------------------------- |
+| `@varolisto/shared-schemas`             | Re-exporta todo (excepto `admin`, que se expone como namespace) |
+| `@varolisto/shared-schemas/form`        | Schemas y tipos del formulario público                      |
+| `@varolisto/shared-schemas/enums`       | Constantes y tipos de enums de dominio                      |
+| `@varolisto/shared-schemas/validators`  | Validadores CLABE, CURP, RFC, teléfono MX                   |
+| `@varolisto/shared-schemas/domain`      | Schemas del modelo persistido                               |
+| `@varolisto/shared-schemas/api`         | Schemas de endpoints públicos (`/api/solicitudes`, cotización) |
+| `@varolisto/shared-schemas/admin`       | Schemas de endpoints `/api/admin/solicitudes/*`             |
 
 ## Uso
 
 ### Formulario de solicitud (`/form`)
 
-Un schema por cada paso del formulario, más uno combinado:
+Un schema por cada paso del formulario público, más uno combinado:
 
 ```ts
 import {
-  paso1Schema,      // Datos personales y dirección
-  paso2Schema,      // Monto, plazo y destino del crédito
-  paso3Schema,      // Situación laboral e ingresos
-  paso4Schema,      // Dos referencias personales
-  paso5Schema,      // CLABE y comprobantes de ingreso
-  paso6Schema,      // Aceptación de términos y privacidad
-  solicitudSchema,  // Los 6 pasos combinados
-  ACCEPTED_MIME_TYPES,
-  MAX_FILE_SIZE_BYTES,
+  paso1Schema,            // Datos personales: nombre, CURP, RFC opcional, sexo, fechaNacimiento
+  paso2Schema,            // Dirección: CP, colonia, calle, municipio, estado
+  paso3Schema,            // Crédito: monto (2k–20k), plazo (2–6 meses), destino
+  paso4Schema,            // Situación laboral, ingresos, deudas
+  paso5Schema,            // Dos referencias personales (nombre, teléfono, relación, email opcional)
+  paso6Schema,            // tipoIdentificacion + archivosDeclarados (1–7 archivos)
+  paso7Schema,            // aceptaPrivacidad + aceptaTerminos (literal true)
+  solicitudSchema,        // Los 7 pasos combinados con .and()
+  archivoDeclaradoSchema, // Shape de cada archivo en archivosDeclarados
+  ACCEPTED_MIME_TYPES,    // ["image/jpeg", "image/png", "application/pdf"]
+  MAX_FILE_SIZE_BYTES,    // 10 * 1024 * 1024
 } from "@varolisto/shared-schemas/form"
 
 // Validar un paso individual
@@ -78,9 +82,13 @@ import type {
   Paso4Data,
   Paso5Data,
   Paso6Data,
+  Paso7Data,
   SolicitudCompleta,
+  ArchivoDeclarado,
 } from "@varolisto/shared-schemas/form"
 ```
+
+> **Nota**: la CLABE no se captura en el formulario público — la ingresa el operador desde el panel admin (`PATCH /api/admin/solicitudes/:folio/datos-personales`). Por eso vive en `admin/datos-personales.ts`, no en `form/`.
 
 ### Enums de dominio (`/enums`)
 
@@ -105,7 +113,8 @@ import {
   NUMERO_CREDITO,       // "primer" | "segundo" | "tercero_mas"
   CONCEPTO_CONDONABLE,  // "moratorios" | "interes_ordinario"
   ORIGEN_ARCHIVO,       // "operador" | "solicitante_formulario" | ... (5 orígenes)
-  MOTIVO_RECHAZO,       // "score_insuficiente" | "cuota_ingreso_excesiva" | ... (5 motivos)
+  MOTIVO_RECHAZO,       // "score_insuficiente" | "cuota_ingreso_excesiva" | "fraude_detectado" | ... (6 motivos)
+  MOTIVO_CANCELACION,   // "cliente_no_acepto_terminos" | "cliente_no_responde" | "cliente_solicito_otro_producto" | "decision_operativa"
   PROPOSITO_TOKEN,      // "subir_documentos"
 } from "@varolisto/shared-schemas/enums"
 
@@ -128,6 +137,7 @@ import type {
   ConceptoCondonable,
   OrigenArchivo,
   MotivoRechazo,
+  MotivoCancelacion,
   PropositoToken,
 } from "@varolisto/shared-schemas/enums"
 ```
@@ -189,21 +199,73 @@ import type {
 } from "@varolisto/shared-schemas/domain"
 ```
 
-### Schemas de API (`/api`)
+### Schemas de API pública (`/api`)
 
-Schemas de request y response para los endpoints REST:
+Schemas de request y response para los endpoints públicos del backend:
 
 ```ts
 import {
   crearSolicitudRequestSchema,
   crearSolicitudResponseSchema,
+  generarCotizacionRequestSchema,
+  generarCotizacionResponseSchema,
 } from "@varolisto/shared-schemas/api"
 
 import type {
   CrearSolicitudRequest,
   CrearSolicitudResponse,
+  GenerarCotizacionRequest,
+  GenerarCotizacionResponse,
 } from "@varolisto/shared-schemas/api"
 ```
+
+### Schemas del módulo admin (`/admin`)
+
+Schemas de request y response para los endpoints `/api/admin/solicitudes/*` del backend (panel del operador):
+
+```ts
+import {
+  // Listado y detalle
+  listaFiltrosSchema,
+  listaResponseSchema,
+  detalleResponseSchema,
+  // Scoring y propuesta
+  cerrarScoringRequestSchema,
+  calcularPropuestaRequestSchema,
+  calcularPropuestaResponseSchema,
+  emitirPropuestaRequestSchema,
+  // Transiciones de estado
+  aprobarRequestSchema,
+  rechazarRequestSchema,
+  cancelarRequestSchema,
+  pedirInfoRequestSchema,
+  marcarInfoRecibidaRequestSchema,
+  // Modificaciones
+  modificarTerminosRequestSchema,
+  actualizarDatosPersonalesAdminRequestSchema,
+  // Archivos del expediente
+  adminUploadUrlRequestSchema,
+  adminUploadUrlResponseSchema,
+} from "@varolisto/shared-schemas/admin"
+
+import type {
+  ListaFiltros,
+  ListaResponse,
+  DetalleResponse,
+  CerrarScoringRequest,
+  CalcularPropuestaRequest,
+  CalcularPropuestaResponse,
+  AprobarRequest,
+  RechazarRequest,
+  CancelarRequest,
+  ModificarTerminosRequest,
+  ActualizarDatosPersonalesAdminRequest,
+  AdminUploadUrlRequest,
+  AdminUploadUrlResponse,
+} from "@varolisto/shared-schemas/admin"
+```
+
+> **Nota sobre el barrel raíz**: a diferencia del resto, `admin` se expone como **namespace** desde `@varolisto/shared-schemas` (no se mezcla en el espacio de nombres global). Si importas desde el barrel raíz, usa `import { admin } from "@varolisto/shared-schemas"` y accede como `admin.aprobarRequestSchema`. Para uso normal, importa directo desde `@varolisto/shared-schemas/admin`.
 
 ### Helper (`zStr`)
 
