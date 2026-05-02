@@ -1,5 +1,5 @@
-import { z } from "zod"
-import { TIPO_ARCHIVO } from "../enums/tipoArchivo.js"
+import { z } from 'zod'
+import { TIPO_ARCHIVO } from '../enums/tipoArchivo.js'
 
 export const adminUploadUrlRequestSchema = z.object({
   tipo_archivo: z.enum(TIPO_ARCHIVO),

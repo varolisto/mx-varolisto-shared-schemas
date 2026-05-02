@@ -30,6 +30,9 @@ Los enums de este paquete son la **fuente de verdad** de los valores válidos de
 | `pnpm build:cjs` | `tsc --module CommonJS --moduleResolution node --outDir dist/cjs` |
 | `pnpm build:types` | `tsc --declaration --emitDeclarationOnly --outDir dist/types` |
 | `pnpm typecheck` | `tsc --noEmit` (verifica tipos sin emitir) |
+| `pnpm lint` | Biome check (lint + format) sobre `src/` |
+| `pnpm lint:fix` | Biome con `--write` (corrige automático) |
+| `pnpm format` | Biome format con `--write` |
 | `pnpm clean` | `rm -rf dist` |
 | `pnpm release` | `pnpm build && changeset publish` (uso manual; el flujo normal es vía Changesets en CI) |
 
@@ -42,7 +45,7 @@ Los enums de este paquete son la **fuente de verdad** de los valores válidos de
 - TypeScript ≥ 5.4 estricto, target ES2020, module NodeNext
 - Zod ^4.0.0 como **peer dependency** (no se bundlea — el consumidor lo provee)
 - Build dual ESM + CJS + tipos separados (3 invocaciones de `tsc`)
-- Sin linter ni formatter configurado (los archivos tienen estilo consistente: comillas dobles, sin punto y coma)
+- Linter/formatter: Biome 2 (no ESLint, no Prettier). Estilo: comillas simples, sin punto y coma, indent 2 espacios, line width 100. Lo aplica Biome — correr `pnpm format`.
 - Changesets para versionado y release
 
 ## Entry points (subpaths exportados)

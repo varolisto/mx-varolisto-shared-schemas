@@ -1,5 +1,5 @@
-import { z } from "zod"
-import { SEXO } from "../enums/sexo.js"
+import { z } from 'zod'
+import { SEXO } from '../enums/sexo.js'
 
 export const solicitanteDomainSchema = z.object({
   curp: z.string().length(18),

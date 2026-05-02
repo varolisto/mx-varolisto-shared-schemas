@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from 'zod'
 
 // TODO: definir schema del endpoint POST /cotizaciones
 export const generarCotizacionRequestSchema = z.object({})

@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from 'zod'
 
 // TODO: definir schema de préstamo activo
 export const prestamoSchema = z.object({})

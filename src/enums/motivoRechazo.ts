@@ -1,10 +1,10 @@
 export const MOTIVO_RECHAZO = [
-  "score_insuficiente",
-  "cuota_ingreso_excesiva",
-  "referencias_no_confirmadas",
-  "inconsistencia_documental",
-  "fraude_detectado",
-  "otro",
+  'score_insuficiente',
+  'cuota_ingreso_excesiva',
+  'referencias_no_confirmadas',
+  'inconsistencia_documental',
+  'fraude_detectado',
+  'otro',
 ] as const
 
-export type MotivoRechazo = typeof MOTIVO_RECHAZO[number]
+export type MotivoRechazo = (typeof MOTIVO_RECHAZO)[number]

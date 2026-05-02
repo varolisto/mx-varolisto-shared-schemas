@@ -1,2 +1,2 @@
-export * from "./crearSolicitud.js"
-export * from "./generarCotizacion.js"
+export * from './crearSolicitud.js'
+export * from './generarCotizacion.js'

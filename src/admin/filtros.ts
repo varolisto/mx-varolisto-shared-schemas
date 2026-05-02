@@ -1,5 +1,5 @@
-import { z } from "zod"
-import { ESTADO_SOLICITUD } from "../enums/estadoSolicitud.js"
+import { z } from 'zod'
+import { ESTADO_SOLICITUD } from '../enums/estadoSolicitud.js'
 
 export const listaFiltrosSchema = z.object({
   estado: z.enum(ESTADO_SOLICITUD).optional(),

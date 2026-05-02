@@ -57,12 +57,16 @@
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build",
     "typecheck": "tsc --noEmit",
+    "lint": "biome check src",
+    "lint:fix": "biome check --write src",
+    "format": "biome format --write src",
     "release": "pnpm build && changeset publish"
   },
   "peerDependencies": {
     "zod": "^4.0.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.13",
     "@changesets/cli": "^2.31.0",
     "typescript": "^5.4.0",
     "zod": "^4.3.6"
