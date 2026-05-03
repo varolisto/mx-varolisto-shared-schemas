@@ -6,3 +6,7 @@ coverage/
 # Lockfiles de package managers no soportados
 package-lock.json
 yarn.lock
+
+.DS_Store
+*.log
+.vscode/
