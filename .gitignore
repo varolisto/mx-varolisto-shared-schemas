@@ -1,5 +1,6 @@
 node_modules/
 dist/
+coverage/
 *.tsbuildinfo
 
 # Lockfiles de package managers no soportados

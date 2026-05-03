@@ -1,0 +1,5 @@
+export * from "./clabes.js"
+export * from "./curps.js"
+export * from "./rfcs.js"
+export * from "./telefonos.js"
+export * from "./solicitud.fixture.js"

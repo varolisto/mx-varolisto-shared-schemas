@@ -4,11 +4,32 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-- `npm run build` — Compila ESM, CJS y tipos en `dist/` (ejecuta los tres `build:*` en secuencia)
-- `npm run typecheck` — Verifica tipos sin emitir archivos
-- `npm run clean` — Elimina `dist/`
+- `pnpm build` — Compila ESM, CJS y tipos en `dist/` (ejecuta los tres `build:*` en secuencia)
+- `pnpm typecheck` — Verifica tipos sin emitir archivos
+- `pnpm clean` — Elimina `dist/`
+- `pnpm test` — Corre la suite Vitest una vez
+- `pnpm test:watch` — Vitest en modo watch
+- `pnpm test:coverage` — Suite + reporte de cobertura (falla si baja del threshold)
+- `pnpm depcheck` — Verifica reglas de capas con dependency-cruiser
+- `pnpm verify` — `typecheck → depcheck → test:coverage → build`
 
-No hay framework de pruebas configurado.
+## Testing
+
+Vitest está configurado con tests co-localizados (`paso1.test.ts` junto a `paso1.ts`) y fixtures compartidos en `src/__fixtures__/`. Ver `TESTING.md` para la disciplina TDD, plantillas y thresholds.
+
+## Reglas de capas
+
+| Capa | Importa de |
+|---|---|
+| `enums/` | nada |
+| `helpers.ts` | nada |
+| `validators/` | nada |
+| `domain/` | `enums`, `helpers` |
+| `form/` | `validators`, `enums`, `helpers` |
+| `api/` | `form`, `domain`, `enums`, `helpers` |
+| `admin/` | `domain`, `validators`, `enums`, `helpers` |
+
+Enforzadas por `dependency-cruiser` (`.dependency-cruiser.cjs`). `pnpm depcheck` falla si se viola.
 
 ## Publicación
 

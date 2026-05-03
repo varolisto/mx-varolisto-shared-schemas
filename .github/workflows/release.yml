@@ -37,6 +37,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Layer rules (dependency-cruiser)
+        run: pnpm depcheck
+
+      - name: Tests + coverage
+        run: pnpm test:coverage
+
       - name: Build package
         run: pnpm build
 

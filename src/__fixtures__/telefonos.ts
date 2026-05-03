@@ -1,0 +1,11 @@
+export const VALID_TELEFONO = "5512345678"
+export const VALID_TELEFONO_OTHER = "8112345678"
+export const VALID_TELEFONO_FORMATTED = "(55) 1234-5678"
+
+/** Validator strips +,(,),-,space — pero el resultado debe quedar en 10 dígitos. */
+export const INVALID_TELEFONO_WITH_LADA_52 = "+525512345678"
+export const INVALID_TELEFONO_STARTS_WITH_1 = "1234567890"
+export const INVALID_TELEFONO_STARTS_WITH_0 = "0234567890"
+export const INVALID_TELEFONO_TOO_SHORT = "551234567"
+export const INVALID_TELEFONO_TOO_LONG = "55123456789"
+export const INVALID_TELEFONO_NON_NUMERIC = "55ABCD5678"
