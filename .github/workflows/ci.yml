@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, sandbox]
+    branches: [main, sandbox, 'changeset-release/**']
   pull_request:
     branches: [main, sandbox]
 
