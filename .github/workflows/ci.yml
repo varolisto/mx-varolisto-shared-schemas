@@ -29,5 +29,18 @@ jobs:
       - name: Lint (Biome)
         run: pnpm lint
 
+      - name: Verificar reglas de capas
+        run: pnpm depcheck
+
+      - name: Tests con cobertura
+        run: pnpm test:coverage
+
+      - name: Subir reporte de cobertura
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage
+          path: coverage/
+
       - name: Build dual ESM + CJS + types
         run: pnpm build
