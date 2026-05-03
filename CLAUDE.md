@@ -38,7 +38,7 @@ Los enums de este paquete son la **fuente de verdad** de los valores válidos de
 
 `prepublishOnly` corre `clean` + `build` automáticamente al publicar.
 
-> **No hay framework de pruebas configurado.** Todo se valida por typecheck + uso real desde frontend/backend. Si agregas tests en el futuro, configurar Vitest y excluirlo del build (`tsconfig.build.json` ya excluye `**/*.test.ts`).
+> **Framework de pruebas: Vitest.** Ver `TESTING.md` para la guía completa. Tests co-localizados junto a la fuente; fixtures centralizados en `src/__fixtures__/`. Correr `pnpm test:coverage` antes de abrir PR — los thresholds (90% en `validators/` y `form/paso*.ts`, 70% global) fallan el build si no se cumplen.
 
 ## Stack
 
@@ -121,6 +121,24 @@ src/
 dist/                            # Generado por build — no editar
 ├── esm/, cjs/, types/
 ```
+
+## Reglas de capas (dependency-cruiser)
+
+Las dependencias entre carpetas están codificadas en `.dependency-cruiser.cjs` y se validan con `pnpm depcheck`. Violar una regla falla el CI.
+
+| Capa | Puede importar de... |
+|---|---|
+| `enums/`, `helpers.ts` | nada (hojas) |
+| `validators/` | nada (hojas) |
+| `domain/` | `enums/`, `helpers.ts` |
+| `form/` | `validators/`, `enums/`, `helpers.ts` |
+| `api/` | `form/`, `domain/`, `enums/`, `helpers.ts` |
+| `admin/` | `domain/`, `validators/`, `enums/`, `helpers.ts` |
+
+Reglas clave:
+- `domain` **no** depende de `form`/`api`/`admin`
+- `form` **no** depende de `domain`
+- `admin` **no** depende de `form`/`api`
 
 ## Convenciones del paquete
 
