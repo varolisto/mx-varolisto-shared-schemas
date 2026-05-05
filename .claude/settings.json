@@ -9,6 +9,12 @@
           { "type": "command", "command": ".claude/hooks/block-pr-without-changeset.sh" },
           { "type": "command", "command": ".claude/hooks/pre-commit-gate.sh" }
         ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/pre-edit-branch-check.sh" }
+        ]
       }
     ],
     "PostToolUse": [
@@ -26,10 +32,14 @@
     "SessionStart": [
       {
         "hooks": [
-          {
-            "type": "command",
-            "command": "printf '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"Repo: mx-varolisto-shared-schemas (paquete @varolisto/shared-schemas en GitHub Packages). Reglas duras: (1) Versionado solo via Changesets (`pnpm changeset` -> PR -> release.yml). NO usar npm version / git tag / pnpm publish directo. (2) Imports relativos llevan `.js` (module: NodeNext). (3) Enums son fuente de verdad: cambiar uno implica PR equivalente en backend/prisma/schema.prisma. (4) Sin servidores: cualquier proceso aux usa >= 5000.\"}}\\n'"
-          }
+          { "type": "command", "command": ".claude/hooks/session-start.sh" }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/workflow-reminder.sh" }
         ]
       }
     ]
