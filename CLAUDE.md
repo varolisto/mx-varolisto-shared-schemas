@@ -222,6 +222,21 @@ operadorId: uuidSchema.nullable()
 - TypeScript con `module: NodeNext` → **todos los imports relativos llevan `.js`** aunque el archivo fuente sea `.ts`. Ej: `from "./paso1.js"`.
 - No usar `import type` en barrels que reexportan ambos (valor + tipo) — usar `export { x }` y `export type { X }` separados, como en `form/index.ts`.
 
+### Por qué `admin/detalle.ts` NO reutiliza los schemas de `domain/`
+
+Los schemas de `admin/detalle.ts` y los de `domain/` tienen el mismo nombre conceptual (solicitante, referencia, archivo…) pero son **contratos distintos** y deben mantenerse separados.
+
+| Aspecto | `domain/` | `admin/detalle.ts` |
+|---|---|---|
+| Propósito | Validar datos **entrando** al sistema (form → Prisma) | Validar datos **saliendo** de la API (Postgres → cliente) |
+| Fechas | `z.coerce.date()` → tipo `Date` | `z.string().datetime()` → tipo `string` |
+| Validaciones | Estrictas: `.length()`, `.max()`, `.email()` | Permisivas: el dato ya fue validado al entrar |
+| Campos extra | `fallecidoAt`, `hashSha256`, `metadata` | `id`, `createdAt`, `bloqueadoPorFraude`, timestamps de auditoría |
+
+Usar `.extend()` desde `domain/` cambiaría el tipo inferido de `DetalleResponse` — por ejemplo `fechaNacimiento` pasaría de `string` a `Date` — rompiendo el frontend y backend que lo consumen como string ISO.
+
+**Regla**: no intentar unificar estos schemas. Si añades un campo a un schema de `domain/`, evalúa manualmente si `admin/detalle.ts` también debe recibirlo.
+
 ### Sincronización con el backend
 
 > **Crítico**: los enums de este paquete deben mantenerse sincronizados con los `enum` del `schema.prisma` del backend (`mx-varolisto-api-backend`). Cuando agregues o modifiques un enum aquí, **el mismo cambio debe ir en el schema de Prisma** y crearse la migración correspondiente. Los enums son la fuente de verdad; Prisma debe reflejarlos.
