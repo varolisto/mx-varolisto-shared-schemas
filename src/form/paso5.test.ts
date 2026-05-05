@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest'
+import { assertType, describe, expect, it } from 'vitest'
+import type { Paso5Data } from './paso5.js'
 import { paso5Schema } from './paso5.js'
 
 const base = {
@@ -76,5 +77,20 @@ describe('paso5Schema', () => {
     if (!r.success) {
       expect(r.error.issues[0]?.message).toBe('Selecciona una relación')
     }
+  })
+
+  it('infiere claves literales (ref1Nombre, ref1Telefono, ...) como string requerido', () => {
+    const parsed = paso5Schema.parse(base)
+
+    assertType<string>(parsed.ref1Nombre)
+    assertType<string>(parsed.ref1Telefono)
+    assertType<string>(parsed.ref2Nombre)
+    assertType<string>(parsed.ref2Telefono)
+
+    const data: Paso5Data = base
+    expect(typeof data.ref1Nombre).toBe('string')
+    expect(typeof data.ref1Telefono).toBe('string')
+    expect(typeof data.ref2Nombre).toBe('string')
+    expect(typeof data.ref2Telefono).toBe('string')
   })
 })
