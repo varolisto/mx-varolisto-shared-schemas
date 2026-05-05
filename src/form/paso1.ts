@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { APELLIDO_MAX_LENGTH, NOMBRE_MAX_LENGTH } from '../constants.js'
 import { SEXO } from '../enums/sexo.js'
 import { enumSelecciona, zStr } from '../helpers.js'
 import { isValidCurp } from '../validators/curp.js'
@@ -6,9 +7,13 @@ import { isValidRfc } from '../validators/rfc.js'
 import { isValidTelefonoMx } from '../validators/telefonoMx.js'
 
 export const paso1Schema = z.object({
-  nombre: zStr().min(2, 'Mínimo 2 caracteres'),
-  apellidoPaterno: zStr().min(2, 'Mínimo 2 caracteres'),
-  apellidoMaterno: zStr().min(2, 'Mínimo 2 caracteres'),
+  nombre: zStr().min(2, 'Mínimo 2 caracteres').max(NOMBRE_MAX_LENGTH, 'Nombre demasiado largo'),
+  apellidoPaterno: zStr()
+    .min(2, 'Mínimo 2 caracteres')
+    .max(APELLIDO_MAX_LENGTH, 'Apellido demasiado largo'),
+  apellidoMaterno: zStr()
+    .min(2, 'Mínimo 2 caracteres')
+    .max(APELLIDO_MAX_LENGTH, 'Apellido demasiado largo'),
   sexo: enumSelecciona(SEXO),
   fechaNacimiento: zStr('Selecciona una fecha')
     .regex(/^\d{4}-\d{2}-\d{2}$/, 'Formato inválido')

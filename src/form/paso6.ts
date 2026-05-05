@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { ARCHIVO_NOMBRE_MAX_LENGTH } from '../constants.js'
 import { TIPO_ARCHIVO } from '../enums/tipoArchivo.js'
 import { TIPO_IDENTIFICACION } from '../enums/tipoIdentificacion.js'
 
@@ -7,8 +8,16 @@ export const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024
 
 export const archivoDeclaradoSchema = z.object({
   tipoArchivo: z.enum(TIPO_ARCHIVO),
-  nombreOriginal: z.string().min(1, 'Nombre de archivo inválido').max(255),
-  mimeType: z.string().min(1),
+  nombreOriginal: z
+    .string()
+    .min(1, 'Nombre de archivo inválido')
+    .max(ARCHIVO_NOMBRE_MAX_LENGTH)
+    .refine(
+      (val) =>
+        !val.includes('..') && !val.includes('/') && !val.includes('\\') && !val.includes('\0'),
+      'Nombre de archivo inválido',
+    ),
+  mimeType: z.enum(ACCEPTED_MIME_TYPES, { error: () => 'Tipo de archivo no permitido' }),
   tamanoBytes: z.number().int().positive(),
 })
 

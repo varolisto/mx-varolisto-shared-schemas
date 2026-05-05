@@ -86,4 +86,19 @@ describe('paso1Schema', () => {
     const r = paso1Schema.safeParse({ ...base, telefono: '123' })
     expect(r.success).toBe(false)
   })
+
+  it('rechaza nombre con más de 80 caracteres', () => {
+    const r = paso1Schema.safeParse({ ...base, nombre: 'A'.repeat(81) })
+    expect(r.success).toBe(false)
+  })
+
+  it('rechaza apellidoPaterno con más de 60 caracteres', () => {
+    const r = paso1Schema.safeParse({ ...base, apellidoPaterno: 'B'.repeat(61) })
+    expect(r.success).toBe(false)
+  })
+
+  it('rechaza apellidoMaterno con más de 60 caracteres', () => {
+    const r = paso1Schema.safeParse({ ...base, apellidoMaterno: 'C'.repeat(61) })
+    expect(r.success).toBe(false)
+  })
 })

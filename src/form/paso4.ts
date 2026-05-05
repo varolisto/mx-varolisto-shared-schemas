@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { EMPLEADOR_MAX_LENGTH } from '../constants.js'
 import { ANTIGUEDAD } from '../enums/antiguedad.js'
 import { CANTIDAD_DEUDAS } from '../enums/cantidadDeudas.js'
 import { DEPENDIENTES_ECONOMICOS } from '../enums/dependientesEconomicos.js'
@@ -10,7 +11,9 @@ import { enumSelecciona, zStr } from '../helpers.js'
 export const paso4Schema = z
   .object({
     tipoActividad: enumSelecciona(TIPO_ACTIVIDAD),
-    nombreEmpleadorNegocio: zStr().min(2, 'Mínimo 2 caracteres'),
+    nombreEmpleadorNegocio: zStr()
+      .min(2, 'Mínimo 2 caracteres')
+      .max(EMPLEADOR_MAX_LENGTH, 'Nombre demasiado largo'),
     antiguedad: enumSelecciona(ANTIGUEDAD),
     estadoCivil: enumSelecciona(ESTADO_CIVIL),
     dependientesEconomicos: enumSelecciona(DEPENDIENTES_ECONOMICOS),

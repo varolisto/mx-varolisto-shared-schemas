@@ -1,14 +1,15 @@
 import { z } from 'zod'
+import { DIRECCION_NUMERO_MAX_LENGTH, DIRECCION_TEXTO_MAX_LENGTH } from '../constants.js'
 
 export const direccionDomainSchema = z.object({
-  calle: z.string().max(120),
-  numeroExt: z.string().max(20),
-  numeroInt: z.string().max(20).nullable(),
+  calle: z.string().max(DIRECCION_TEXTO_MAX_LENGTH),
+  numeroExt: z.string().max(DIRECCION_NUMERO_MAX_LENGTH),
+  numeroInt: z.string().max(DIRECCION_NUMERO_MAX_LENGTH).nullable(),
   cp: z.string().length(5),
-  colonia: z.string().max(120),
-  municipio: z.string().max(120),
+  colonia: z.string().max(DIRECCION_TEXTO_MAX_LENGTH),
+  municipio: z.string().max(DIRECCION_TEXTO_MAX_LENGTH),
   estado: z.string().max(60),
-  ciudad: z.string().max(120).nullable(),
+  ciudad: z.string().max(DIRECCION_TEXTO_MAX_LENGTH).nullable(),
   esVigente: z.boolean().default(true),
 })
 

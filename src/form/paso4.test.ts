@@ -118,4 +118,9 @@ describe('paso4Schema', () => {
     const r = paso4Schema.safeParse({ ...baseSinDeudas, ingresoMensual: 'veinte mil' })
     expect(r.success).toBe(false)
   })
+
+  it('rechaza nombreEmpleadorNegocio con más de 120 caracteres', () => {
+    const r = paso4Schema.safeParse({ ...baseSinDeudas, nombreEmpleadorNegocio: 'A'.repeat(121) })
+    expect(r.success).toBe(false)
+  })
 })
