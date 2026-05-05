@@ -181,6 +181,35 @@ Reglas clave:
 
 **Regla**: si un número o regex aparece más de una vez en el repo, va en `constants.ts`. Si cambia una regla de negocio (ej. el monto máximo sube a $30,000), se edita en un solo lugar.
 
+```typescript
+// ❌ MAL — literal inline, se duplica en domain/, admin/, api/
+montoSolicitado: z.number().min(2000).max(20000)
+folio: z.string().regex(/^VL-\d{6}-\d{4}$/)
+nota_operador: z.string().min(10).max(1000)
+
+// ✅ BIEN — constante importada de constants.ts
+import { FOLIO_REGEX, MONTO_MAX, MONTO_MIN, NOTA_OPERADOR_MAX, NOTA_OPERADOR_MIN } from '../constants.js'
+montoSolicitado: z.number().min(MONTO_MIN).max(MONTO_MAX)
+folio: z.string().regex(FOLIO_REGEX)
+nota_operador: z.string().min(NOTA_OPERADOR_MIN).max(NOTA_OPERADOR_MAX)
+
+// ❌ MAL — enum con mensaje genérico escrito a mano cada vez
+z.enum(SEXO, { error: () => 'Selecciona una opción' })
+
+// ✅ BIEN — helper que encapsula el patrón
+import { enumSelecciona } from '../helpers.js'
+enumSelecciona(SEXO)
+
+// ❌ MAL — z.string().uuid() repetido en varios campos
+id: z.string().uuid()
+operadorId: z.string().uuid().nullable()
+
+// ✅ BIEN
+import { uuidSchema } from '../helpers.js'
+id: uuidSchema
+operadorId: uuidSchema.nullable()
+```
+
 ### Naming
 
 - **Schemas Zod**: `<nombre>Schema` (ej. `paso1Schema`, `cerrarScoringRequestSchema`).
