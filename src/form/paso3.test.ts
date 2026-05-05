@@ -71,4 +71,29 @@ describe('paso3Schema', () => {
     const r = paso3Schema.safeParse({ ...base, tipoVivienda: 'hipotecada' })
     expect(r.success).toBe(false)
   })
+
+  it('rechaza colonia con más de 120 caracteres', () => {
+    const r = paso3Schema.safeParse({ ...base, colonia: 'A'.repeat(121) })
+    expect(r.success).toBe(false)
+  })
+
+  it('rechaza municipio con más de 120 caracteres', () => {
+    const r = paso3Schema.safeParse({ ...base, municipio: 'A'.repeat(121) })
+    expect(r.success).toBe(false)
+  })
+
+  it('rechaza calle con más de 120 caracteres', () => {
+    const r = paso3Schema.safeParse({ ...base, calle: 'A'.repeat(121) })
+    expect(r.success).toBe(false)
+  })
+
+  it('rechaza numeroExterior con más de 20 caracteres', () => {
+    const r = paso3Schema.safeParse({ ...base, numeroExterior: 'A'.repeat(21) })
+    expect(r.success).toBe(false)
+  })
+
+  it('rechaza numeroInterior con más de 20 caracteres', () => {
+    const r = paso3Schema.safeParse({ ...base, numeroInterior: 'A'.repeat(21) })
+    expect(r.success).toBe(false)
+  })
 })

@@ -49,6 +49,80 @@ describe('archivoDeclaradoSchema', () => {
     const r = archivoDeclaradoSchema.safeParse({ ...archivoIneFrente, tipoArchivo: 'selfie' })
     expect(r.success).toBe(false)
   })
+
+  it('rechaza mimeType fuera de la whitelist (text/html)', () => {
+    const r = archivoDeclaradoSchema.safeParse({ ...archivoIneFrente, mimeType: 'text/html' })
+    expect(r.success).toBe(false)
+  })
+
+  it('rechaza mimeType fuera de la whitelist (application/javascript)', () => {
+    const r = archivoDeclaradoSchema.safeParse({
+      ...archivoIneFrente,
+      mimeType: 'application/javascript',
+    })
+    expect(r.success).toBe(false)
+  })
+
+  it('acepta los tres mimeType permitidos', () => {
+    expect(
+      archivoDeclaradoSchema.safeParse({ ...archivoIneFrente, mimeType: 'image/jpeg' }).success,
+    ).toBe(true)
+    expect(
+      archivoDeclaradoSchema.safeParse({ ...archivoIneFrente, mimeType: 'image/png' }).success,
+    ).toBe(true)
+    expect(
+      archivoDeclaradoSchema.safeParse({ ...archivoIneFrente, mimeType: 'application/pdf' })
+        .success,
+    ).toBe(true)
+  })
+
+  it('rechaza nombreOriginal con path traversal (../etc/passwd)', () => {
+    const r = archivoDeclaradoSchema.safeParse({
+      ...archivoIneFrente,
+      nombreOriginal: '../etc/passwd',
+    })
+    expect(r.success).toBe(false)
+  })
+
+  it('rechaza nombreOriginal con separador unix', () => {
+    const r = archivoDeclaradoSchema.safeParse({
+      ...archivoIneFrente,
+      nombreOriginal: 'subdir/file.jpg',
+    })
+    expect(r.success).toBe(false)
+  })
+
+  it('rechaza nombreOriginal con separador windows', () => {
+    const r = archivoDeclaradoSchema.safeParse({
+      ...archivoIneFrente,
+      nombreOriginal: 'subdir\\file.jpg',
+    })
+    expect(r.success).toBe(false)
+  })
+
+  it('rechaza nombreOriginal con null byte', () => {
+    const r = archivoDeclaradoSchema.safeParse({
+      ...archivoIneFrente,
+      nombreOriginal: 'archivo\0.jpg',
+    })
+    expect(r.success).toBe(false)
+  })
+
+  it('rechaza nombreOriginal con dos puntos consecutivos', () => {
+    const r = archivoDeclaradoSchema.safeParse({
+      ...archivoIneFrente,
+      nombreOriginal: 'foo..bar.jpg',
+    })
+    expect(r.success).toBe(false)
+  })
+
+  it('acepta nombreOriginal con espacios y acentos', () => {
+    const r = archivoDeclaradoSchema.safeParse({
+      ...archivoIneFrente,
+      nombreOriginal: 'Comprobante de ingreso ñoño.pdf',
+    })
+    expect(r.success).toBe(true)
+  })
 })
 
 describe('paso6Schema', () => {
