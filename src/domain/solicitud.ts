@@ -1,12 +1,13 @@
 import { z } from 'zod'
+import { FOLIO_REGEX, MONTO_MAX, MONTO_MIN, PLAZO_MAX, PLAZO_MIN } from '../constants.js'
 import { DESTINO_PRESTAMO } from '../enums/destinoPrestamo.js'
 import { ESTADO_SOLICITUD } from '../enums/estadoSolicitud.js'
 import { MOTIVO_RECHAZO } from '../enums/motivoRechazo.js'
 
 export const solicitudDomainSchema = z.object({
-  folio: z.string().regex(/^VL-\d{6}-\d{4}$/),
-  montoSolicitado: z.number().min(2000).max(20000),
-  plazoMeses: z.number().int().min(2).max(6),
+  folio: z.string().regex(FOLIO_REGEX),
+  montoSolicitado: z.number().min(MONTO_MIN).max(MONTO_MAX),
+  plazoMeses: z.number().int().min(PLAZO_MIN).max(PLAZO_MAX),
   destino: z.enum(DESTINO_PRESTAMO),
   destinoOtro: z.string().nullable(),
   esPrimerCredito: z.boolean(),

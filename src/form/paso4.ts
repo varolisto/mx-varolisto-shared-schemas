@@ -5,21 +5,19 @@ import { DEPENDIENTES_ECONOMICOS } from '../enums/dependientesEconomicos.js'
 import { ESTADO_CIVIL } from '../enums/estadoCivil.js'
 import { MONTO_TOTAL_DEUDAS } from '../enums/montoTotalDeudas.js'
 import { TIPO_ACTIVIDAD } from '../enums/tipoActividad.js'
-import { zStr } from '../helpers.js'
+import { enumSelecciona, zStr } from '../helpers.js'
 
 export const paso4Schema = z
   .object({
-    tipoActividad: z.enum(TIPO_ACTIVIDAD, { error: () => 'Selecciona una opción' }),
+    tipoActividad: enumSelecciona(TIPO_ACTIVIDAD),
     nombreEmpleadorNegocio: zStr().min(2, 'Mínimo 2 caracteres'),
-    antiguedad: z.enum(ANTIGUEDAD, { error: () => 'Selecciona una opción' }),
-    estadoCivil: z.enum(ESTADO_CIVIL, { error: () => 'Selecciona una opción' }),
-    dependientesEconomicos: z.enum(DEPENDIENTES_ECONOMICOS, {
-      error: () => 'Selecciona una opción',
-    }),
+    antiguedad: enumSelecciona(ANTIGUEDAD),
+    estadoCivil: enumSelecciona(ESTADO_CIVIL),
+    dependientesEconomicos: enumSelecciona(DEPENDIENTES_ECONOMICOS),
     ingresoMensual: z
       .number({ error: () => 'Ingresa un ingreso válido' })
       .min(1000, 'Mínimo $1,000'),
-    tieneDeudas: z.enum(['si', 'no'], { error: () => 'Selecciona una opción' }),
+    tieneDeudas: enumSelecciona(['si', 'no'] as const),
     cantidadDeudas: z.enum(CANTIDAD_DEUDAS).optional(),
     montoTotalDeudas: z.enum(MONTO_TOTAL_DEUDAS).optional(),
     pagoMensualDeudas: z.number().min(0).optional(),

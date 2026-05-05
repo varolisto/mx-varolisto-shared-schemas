@@ -1,8 +1,9 @@
 import { z } from 'zod'
+import { MONTO_MAX, MONTO_MIN, PLAZO_MAX, PLAZO_MIN } from '../constants.js'
 
 export const calcularPropuestaRequestSchema = z.object({
-  monto_aprobado: z.number().min(2000).max(20000),
-  plazo_aprobado: z.number().int().min(2).max(6),
+  monto_aprobado: z.number().min(MONTO_MIN).max(MONTO_MAX),
+  plazo_aprobado: z.number().int().min(PLAZO_MIN).max(PLAZO_MAX),
 })
 
 export type CalcularPropuestaRequest = z.infer<typeof calcularPropuestaRequestSchema>

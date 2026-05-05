@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { ANIOS_VIVIENDO } from '../enums/aniosViviendo.js'
 import { TIPO_VIVIENDA } from '../enums/tipoVivienda.js'
-import { zStr } from '../helpers.js'
+import { enumSelecciona, zStr } from '../helpers.js'
 
 export const paso3Schema = z.object({
   codigoPostal: zStr().regex(/^\d{5}$/, 'El CP debe tener 5 dígitos'),
@@ -12,8 +12,8 @@ export const paso3Schema = z.object({
   calle: zStr().min(2, 'Mínimo 2 caracteres'),
   numeroExterior: zStr('Campo requerido').min(1, 'Campo requerido'),
   numeroInterior: z.string().trim().optional(),
-  aniosViviendo: z.enum(ANIOS_VIVIENDO, { error: () => 'Selecciona una opción' }),
-  tipoVivienda: z.enum(TIPO_VIVIENDA, { error: () => 'Selecciona una opción' }),
+  aniosViviendo: enumSelecciona(ANIOS_VIVIENDO),
+  tipoVivienda: enumSelecciona(TIPO_VIVIENDA),
 })
 
 export type Paso3Data = z.infer<typeof paso3Schema>

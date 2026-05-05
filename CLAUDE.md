@@ -21,6 +21,21 @@ Se publica en **GitHub Packages** bajo el scope `@varolisto`. Los consumidores l
 
 Los enums de este paquete son la **fuente de verdad** de los valores válidos del dominio. El `schema.prisma` del backend debe reflejarlos. Cuando agregues o modifiques un enum aquí, abre PR equivalente en el backend.
 
+## TDD — Requisito obligatorio
+
+**Ningún código de producción se escribe sin un test que falle primero.**
+
+Antes de implementar cualquier schema, helper, constante o validador nuevo:
+1. Escribe el test. Ejecútalo. Confirma que falla por la razón correcta (feature ausente, no un error de sintaxis).
+2. Escribe el mínimo código necesario para que pase.
+3. Refactoriza si es necesario. Los tests deben seguir en verde.
+
+Para código existente sin tests (bug fix, refactor): escribe primero el test que reproduce el bug o que describe el comportamiento esperado, luego modifica el código.
+
+`pnpm test:coverage` debe pasar en verde antes de cualquier commit — los thresholds (90% en `validators/` y `form/paso*.ts`, 70% global) fallan el build si no se cumplen.
+
+Los fixtures y datos de prueba deben reflejar datos reales del negocio: montos dentro del rango ($2,000–$20,000), plazos válidos (2–6 meses), folios con formato `VL-AAAAMM-NNNN`, CURPs con formato real, CPs de México que existen. Evitar placeholders genéricos como `"test-curp"` o `"06000"`.
+
 ## Comandos
 
 | Script | Descripción |
@@ -69,7 +84,8 @@ Los siete subpaths definidos en `package.json#exports`:
 ```
 src/
 ├── index.ts                     # Barrel raíz — re-exporta todo (admin como namespace)
-├── helpers.ts                   # zStr() — único helper compartido
+├── constants.ts                 # Reglas de negocio numéricas: MONTO_MIN/MAX, PLAZO_MIN/MAX, NOTA_OPERADOR_MIN/MAX, FOLIO_REGEX
+├── helpers.ts                   # zStr(), enumSelecciona(), uuidSchema — helpers Zod compartidos
 │
 ├── form/                        # Formulario público de solicitud (7 pasos)
 │   ├── paso1.ts                 # Datos personales: nombre, CURP, sexo, fechaNacimiento
@@ -128,12 +144,12 @@ Las dependencias entre carpetas están codificadas en `.dependency-cruiser.cjs` 
 
 | Capa | Puede importar de... |
 |---|---|
-| `enums/`, `helpers.ts` | nada (hojas) |
+| `enums/`, `helpers.ts`, `constants.ts` | nada (hojas) |
 | `validators/` | nada (hojas) |
-| `domain/` | `enums/`, `helpers.ts` |
-| `form/` | `validators/`, `enums/`, `helpers.ts` |
-| `api/` | `form/`, `domain/`, `enums/`, `helpers.ts` |
-| `admin/` | `domain/`, `validators/`, `enums/`, `helpers.ts` |
+| `domain/` | `enums/`, `helpers.ts`, `constants.ts` |
+| `form/` | `validators/`, `enums/`, `helpers.ts`, `constants.ts` |
+| `api/` | `form/`, `domain/`, `enums/`, `helpers.ts`, `constants.ts` |
+| `admin/` | `domain/`, `validators/`, `enums/`, `helpers.ts`, `constants.ts` |
 
 Reglas clave:
 - `domain` **no** depende de `form`/`api`/`admin`
@@ -146,9 +162,53 @@ Reglas clave:
 
 - **Mensajes de error en español** y dirigidos al usuario final (lo lee humano en el form): `"Mínimo 2 caracteres"`, `"Selecciona un tipo de identificación"`. Evitar mensajes técnicos.
 - **`zStr(msg?)`** es el atajo canónico para campos de texto requeridos: hace `z.string({ error: () => msg }).trim().min(1, msg)`. Usarlo siempre que necesites un string no vacío con trim. No reimplementar el patrón.
+- **`enumSelecciona(ENUM)`** para enums con mensaje genérico `"Selecciona una opción"`. Para mensajes específicos (`"Selecciona un destino"`) seguir usando `z.enum(ENUM, { error: () => "..." })` a mano.
+- **`uuidSchema`** como shorthand de `z.string().uuid()`. No reimplementar.
 - **Enums vía `z.enum(MI_ENUM, { error: () => "Selecciona ..." })`** donde `MI_ENUM` viene de `src/enums/`. No usar `z.enum(["a", "b"])` con literales inline en schemas — perdés la fuente única de verdad.
 - **Refinements custom (CLABE, CURP, teléfono)**: importar el helper `isValidX` desde `src/validators/` y pasarlo a `.refine(isValidX, "Mensaje")`. No copiar regex.
 - **Cross-field validation**: usar `.refine()` o `.superRefine()` a nivel object, no a nivel campo.
+
+### Centralización de constantes de negocio
+
+`src/constants.ts` es la **fuente única de verdad** para reglas de negocio numéricas y expresiones regulares compartidas. Antes de escribir un literal inline en un schema, verificar si ya existe una constante:
+
+| Constante | Valor | Usar cuando... |
+|---|---|---|
+| `MONTO_MIN` / `MONTO_MAX` | 2000 / 20000 | cualquier `.min()` / `.max()` sobre monto del crédito |
+| `PLAZO_MIN` / `PLAZO_MAX` | 2 / 6 | cualquier `.min()` / `.max()` sobre plazo en meses (numérico) |
+| `NOTA_OPERADOR_MIN` / `NOTA_OPERADOR_MAX` | 10 / 1000 | campos de texto libre de operador admin |
+| `FOLIO_REGEX` | `/^VL-\d{6}-\d{4}$/` | validación del folio interno |
+
+**Regla**: si un número o regex aparece más de una vez en el repo, va en `constants.ts`. Si cambia una regla de negocio (ej. el monto máximo sube a $30,000), se edita en un solo lugar.
+
+```typescript
+// ❌ MAL — literal inline, se duplica en domain/, admin/, api/
+montoSolicitado: z.number().min(2000).max(20000)
+folio: z.string().regex(/^VL-\d{6}-\d{4}$/)
+nota_operador: z.string().min(10).max(1000)
+
+// ✅ BIEN — constante importada de constants.ts
+import { FOLIO_REGEX, MONTO_MAX, MONTO_MIN, NOTA_OPERADOR_MAX, NOTA_OPERADOR_MIN } from '../constants.js'
+montoSolicitado: z.number().min(MONTO_MIN).max(MONTO_MAX)
+folio: z.string().regex(FOLIO_REGEX)
+nota_operador: z.string().min(NOTA_OPERADOR_MIN).max(NOTA_OPERADOR_MAX)
+
+// ❌ MAL — enum con mensaje genérico escrito a mano cada vez
+z.enum(SEXO, { error: () => 'Selecciona una opción' })
+
+// ✅ BIEN — helper que encapsula el patrón
+import { enumSelecciona } from '../helpers.js'
+enumSelecciona(SEXO)
+
+// ❌ MAL — z.string().uuid() repetido en varios campos
+id: z.string().uuid()
+operadorId: z.string().uuid().nullable()
+
+// ✅ BIEN
+import { uuidSchema } from '../helpers.js'
+id: uuidSchema
+operadorId: uuidSchema.nullable()
+```
 
 ### Naming
 

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { zStr } from './helpers.js'
+import { SEXO } from './enums/sexo.js'
+import { enumSelecciona, uuidSchema, zStr } from './helpers.js'
 
 describe('zStr', () => {
   it('acepta un string no vacío', () => {
@@ -37,5 +38,48 @@ describe('zStr', () => {
     if (!result.success) {
       expect(result.error.issues[0]?.message).toBe('Selecciona una opción')
     }
+  })
+})
+
+describe('enumSelecciona', () => {
+  it('acepta valor válido del enum', () => {
+    const schema = enumSelecciona(SEXO)
+    expect(schema.parse('M')).toBe('M')
+  })
+
+  it('rechaza valor fuera del enum con mensaje "Selecciona una opción"', () => {
+    const schema = enumSelecciona(SEXO)
+    const result = schema.safeParse('Z')
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues[0]?.message).toBe('Selecciona una opción')
+    }
+  })
+
+  it('rechaza undefined con mensaje "Selecciona una opción"', () => {
+    const schema = enumSelecciona(SEXO)
+    const result = schema.safeParse(undefined)
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues[0]?.message).toBe('Selecciona una opción')
+    }
+  })
+})
+
+describe('uuidSchema', () => {
+  it('acepta un UUID v4 válido', () => {
+    expect(uuidSchema.parse('550e8400-e29b-41d4-a716-446655440000')).toBe(
+      '550e8400-e29b-41d4-a716-446655440000',
+    )
+  })
+
+  it('rechaza un string que no es UUID', () => {
+    const result = uuidSchema.safeParse('no-es-uuid')
+    expect(result.success).toBe(false)
+  })
+
+  it('rechaza string vacío', () => {
+    const result = uuidSchema.safeParse('')
+    expect(result.success).toBe(false)
   })
 })

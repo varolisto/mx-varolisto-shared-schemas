@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { SEXO } from '../enums/sexo.js'
-import { zStr } from '../helpers.js'
+import { enumSelecciona, zStr } from '../helpers.js'
 import { isValidCurp } from '../validators/curp.js'
 import { isValidRfc } from '../validators/rfc.js'
 import { isValidTelefonoMx } from '../validators/telefonoMx.js'
@@ -9,7 +9,7 @@ export const paso1Schema = z.object({
   nombre: zStr().min(2, 'Mínimo 2 caracteres'),
   apellidoPaterno: zStr().min(2, 'Mínimo 2 caracteres'),
   apellidoMaterno: zStr().min(2, 'Mínimo 2 caracteres'),
-  sexo: z.enum(SEXO, { error: () => 'Selecciona una opción' }),
+  sexo: enumSelecciona(SEXO),
   fechaNacimiento: zStr('Selecciona una fecha')
     .regex(/^\d{4}-\d{2}-\d{2}$/, 'Formato inválido')
     .refine((val) => {

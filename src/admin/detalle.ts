@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { FOLIO_REGEX } from '../constants.js'
 import { CANTIDAD_DEUDAS } from '../enums/cantidadDeudas.js'
 import { DESTINO_PRESTAMO } from '../enums/destinoPrestamo.js'
 import { ESTADO_SOLICITUD } from '../enums/estadoSolicitud.js'
@@ -10,10 +11,11 @@ import { RELACION_REFERENCIA } from '../enums/relacionReferencia.js'
 import { SEXO } from '../enums/sexo.js'
 import { TIPO_ACTIVIDAD } from '../enums/tipoActividad.js'
 import { TIPO_ARCHIVO } from '../enums/tipoArchivo.js'
+import { uuidSchema } from '../helpers.js'
 
 const solicitudCompletaSchema = z.object({
-  id: z.string().uuid(),
-  folio: z.string().regex(/^VL-\d{6}-\d{4}$/),
+  id: uuidSchema,
+  folio: z.string().regex(FOLIO_REGEX),
   montoSolicitado: z.number(),
   plazoMeses: z.number().int(),
   destino: z.enum(DESTINO_PRESTAMO),
@@ -33,7 +35,7 @@ const solicitudCompletaSchema = z.object({
 })
 
 const solicitanteCompletoSchema = z.object({
-  id: z.string().uuid(),
+  id: uuidSchema,
   curp: z.string().length(18),
   nombre: z.string(),
   apellidoPaterno: z.string(),
@@ -58,7 +60,7 @@ const ingresosSchema = z.object({
 })
 
 const referenciaSchema = z.object({
-  id: z.string().uuid(),
+  id: uuidSchema,
   nombre: z.string(),
   telefono: z.string(),
   relacion: z.enum(RELACION_REFERENCIA),
@@ -68,7 +70,7 @@ const referenciaSchema = z.object({
 })
 
 const archivoSchema = z.object({
-  id: z.string().uuid(),
+  id: uuidSchema,
   tipoArchivo: z.enum(TIPO_ARCHIVO),
   origen: z.enum(ORIGEN_ARCHIVO),
   storagePath: z.string(),
@@ -101,10 +103,10 @@ const parametrosCreditoSchema = z.object({
 })
 
 const eventoResumenSchema = z.object({
-  id: z.string().uuid(),
+  id: uuidSchema,
   tipoEvento: z.string(),
   payload: z.record(z.string(), z.unknown()),
-  operadorId: z.string().uuid().nullable(),
+  operadorId: uuidSchema.nullable(),
   createdAt: z.string().datetime(),
 })
 
