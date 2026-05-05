@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { FOLIO_REGEX } from '../constants.js'
 import { ESTADO_SOLICITUD } from '../enums/estadoSolicitud.js'
 import { solicitudSchema } from '../form/index.js'
 
@@ -16,7 +17,7 @@ export type CrearSolicitudRequest = z.infer<typeof crearSolicitudRequestSchema>
  * Devuelve información mínima al cliente para confirmar recepción.
  */
 export const crearSolicitudResponseSchema = z.object({
-  folio: z.string().regex(/^VL-\d{6}-\d{4}$/),
+  folio: z.string().regex(FOLIO_REGEX),
   estado: z.enum(ESTADO_SOLICITUD),
   fechaCreacion: z.string().datetime(),
   tiempoEsperadoRespuesta: z.string(),

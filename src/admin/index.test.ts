@@ -5,8 +5,10 @@ import {
 } from './calcular-propuesta.js'
 import { cancelarRequestSchema } from './cancelar.js'
 import { actualizarDatosPersonalesAdminRequestSchema } from './datos-personales.js'
+import { detalleResponseSchema } from './detalle.js'
 import { listaFiltrosSchema } from './filtros.js'
 import { listaResponseSchema } from './lista.js'
+import { pedirInfoRequestSchema } from './pedir-info.js'
 import { rechazarRequestSchema } from './rechazar.js'
 import { cerrarScoringRequestSchema } from './scoring.js'
 
@@ -178,6 +180,107 @@ describe('actualizarDatosPersonalesAdminRequestSchema', () => {
     const r = actualizarDatosPersonalesAdminRequestSchema.safeParse({
       numeroIdentificacion: 'ABCD123456',
       clabeDeudor: '12345',
+    })
+    expect(r.success).toBe(false)
+  })
+})
+
+describe('pedirInfoRequestSchema', () => {
+  it('acepta mensaje con 10 o más caracteres', () => {
+    const r = pedirInfoRequestSchema.safeParse({
+      mensaje_para_operador: 'Falta el comprobante de domicilio reciente.',
+    })
+    expect(r.success).toBe(true)
+  })
+
+  it('rechaza mensaje con menos de 10 caracteres', () => {
+    const r = pedirInfoRequestSchema.safeParse({ mensaje_para_operador: 'Corto' })
+    expect(r.success).toBe(false)
+  })
+
+  it('rechaza mensaje con más de 1000 caracteres', () => {
+    const r = pedirInfoRequestSchema.safeParse({
+      mensaje_para_operador: 'A'.repeat(1001),
+    })
+    expect(r.success).toBe(false)
+  })
+})
+
+describe('detalleResponseSchema', () => {
+  const solicitudBase = {
+    id: '550e8400-e29b-41d4-a716-446655440000',
+    folio: 'VL-202601-0042',
+    montoSolicitado: 10000,
+    plazoMeses: 4,
+    destino: 'capital_trabajo',
+    esPrimerCredito: true,
+    estado: 'recibida',
+    motivoRechazo: null,
+    motivoCancelacion: null,
+    notaOperador: null,
+    montoAprobado: null,
+    plazoAprobado: null,
+    tasaMensualAprobada: null,
+    comisionAperturaAprobada: null,
+    aprobadaAt: null,
+    canceladaAt: null,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  }
+
+  const solicitanteBase = {
+    id: '550e8400-e29b-41d4-a716-446655440001',
+    curp: 'PERJ900615HDFRZN08',
+    nombre: 'Juan',
+    apellidoPaterno: 'Pérez',
+    apellidoMaterno: null,
+    fechaNacimiento: '1990-06-15',
+    sexo: 'M',
+    telefono: '5512345678',
+    rfc: null,
+    correo: null,
+    fallecido: false,
+    bloqueadoPorFraude: false,
+  }
+
+  it('acepta detalle completo válido', () => {
+    const r = detalleResponseSchema.safeParse({
+      solicitud: solicitudBase,
+      solicitante: solicitanteBase,
+      ingresos: null,
+      referencias: [],
+      archivos: [],
+      scoring: null,
+      parametros_aplicables: null,
+      eventos: [],
+    })
+    expect(r.success).toBe(true)
+  })
+
+  it('rechaza folio con formato inválido en solicitud', () => {
+    const r = detalleResponseSchema.safeParse({
+      solicitud: { ...solicitudBase, folio: 'INVALIDO-001' },
+      solicitante: solicitanteBase,
+      ingresos: null,
+      referencias: [],
+      archivos: [],
+      scoring: null,
+      parametros_aplicables: null,
+      eventos: [],
+    })
+    expect(r.success).toBe(false)
+  })
+
+  it('rechaza id de solicitud que no es UUID', () => {
+    const r = detalleResponseSchema.safeParse({
+      solicitud: { ...solicitudBase, id: 'no-es-uuid' },
+      solicitante: solicitanteBase,
+      ingresos: null,
+      referencias: [],
+      archivos: [],
+      scoring: null,
+      parametros_aplicables: null,
+      eventos: [],
     })
     expect(r.success).toBe(false)
   })
