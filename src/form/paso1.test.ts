@@ -52,7 +52,7 @@ describe('paso1Schema', () => {
     const r = paso1Schema.safeParse({ ...base, fechaNacimiento })
     expect(r.success).toBe(false)
     if (!r.success) {
-      expect(r.error.issues[0]?.message).toBe('Debes tener al menos 18 años')
+      expect(r.error.issues[0]?.message).toBe('Necesitas ser mayor de edad')
     }
   })
 

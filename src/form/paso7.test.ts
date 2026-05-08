@@ -12,7 +12,7 @@ describe('paso7Schema', () => {
     const r = paso7Schema.safeParse({ aceptaPrivacidad: false, aceptaTerminos: true })
     expect(r.success).toBe(false)
     if (!r.success) {
-      expect(r.error.issues[0]?.message).toBe('Debes aceptar el Aviso de Privacidad')
+      expect(r.error.issues[0]?.message).toBe('Necesitamos tu autorización para continuar')
     }
   })
 
@@ -20,7 +20,7 @@ describe('paso7Schema', () => {
     const r = paso7Schema.safeParse({ aceptaPrivacidad: true, aceptaTerminos: false })
     expect(r.success).toBe(false)
     if (!r.success) {
-      expect(r.error.issues[0]?.message).toBe('Debes aceptar los Términos y Condiciones')
+      expect(r.error.issues[0]?.message).toBe('Necesitamos que aceptes los términos para continuar')
     }
   })
 

@@ -60,9 +60,9 @@ describe('paso5Schema', () => {
     })
     expect(r.success).toBe(false)
     if (!r.success) {
-      expect(
-        r.error.issues.some((i) => i.message.includes('segunda referencia no puede ser igual')),
-      ).toBe(true)
+      expect(r.error.issues.some((i) => i.message.includes('mismo que el del Contacto 1'))).toBe(
+        true,
+      )
     }
   })
 
