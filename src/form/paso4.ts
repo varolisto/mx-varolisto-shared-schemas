@@ -12,29 +12,29 @@ export const paso4Schema = z
   .object({
     tipoActividad: enumSelecciona(TIPO_ACTIVIDAD),
     nombreEmpleadorNegocio: zStr()
-      .min(2, 'Mínimo 2 caracteres')
+      .min(2, 'Escríbelo completo')
       .max(EMPLEADOR_MAX_LENGTH, 'Nombre demasiado largo'),
     antiguedad: enumSelecciona(ANTIGUEDAD),
     estadoCivil: enumSelecciona(ESTADO_CIVIL),
     dependientesEconomicos: enumSelecciona(DEPENDIENTES_ECONOMICOS),
     ingresoMensual: z
       .number({ error: () => 'Ingresa un ingreso válido' })
-      .min(1000, 'Mínimo $1,000'),
+      .min(1000, 'El ingreso debe ser de al menos $1,000'),
     tieneDeudas: enumSelecciona(['si', 'no'] as const),
     cantidadDeudas: z.enum(CANTIDAD_DEUDAS).optional(),
     montoTotalDeudas: z.enum(MONTO_TOTAL_DEUDAS).optional(),
     pagoMensualDeudas: z.number().min(0).optional(),
   })
   .refine((data) => data.tieneDeudas !== 'si' || data.cantidadDeudas !== undefined, {
-    message: 'Indica cuántas deudas tienes',
+    message: 'Falta este dato',
     path: ['cantidadDeudas'],
   })
   .refine((data) => data.tieneDeudas !== 'si' || data.montoTotalDeudas !== undefined, {
-    message: 'Indica el monto total de tus deudas',
+    message: 'Falta este dato',
     path: ['montoTotalDeudas'],
   })
   .refine((data) => data.tieneDeudas !== 'si' || data.pagoMensualDeudas !== undefined, {
-    message: 'Indica tu pago mensual',
+    message: 'Falta este dato',
     path: ['pagoMensualDeudas'],
   })
 

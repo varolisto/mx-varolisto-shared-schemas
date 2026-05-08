@@ -17,7 +17,7 @@ export const archivoDeclaradoSchema = z.object({
         !val.includes('..') && !val.includes('/') && !val.includes('\\') && !val.includes('\0'),
       'Nombre de archivo inválido',
     ),
-  mimeType: z.enum(ACCEPTED_MIME_TYPES, { error: () => 'Tipo de archivo no permitido' }),
+  mimeType: z.enum(ACCEPTED_MIME_TYPES, { error: () => 'Sólo se permiten JPG, PNG o PDF' }),
   tamanoBytes: z.number().int().positive(),
 })
 
@@ -46,7 +46,7 @@ export const paso6Schema = z
       return true
     },
     {
-      message: 'Debes subir la fotografía de tu identificación oficial',
+      message: 'Falta subir tu identificación oficial',
       path: ['archivosDeclarados'],
     },
   )

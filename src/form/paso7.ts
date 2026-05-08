@@ -2,10 +2,10 @@ import { z } from 'zod'
 
 export const paso7Schema = z.object({
   aceptaPrivacidad: z.literal(true, {
-    error: () => 'Debes aceptar el Aviso de Privacidad',
+    error: () => 'Necesitamos tu autorización para continuar',
   }),
   aceptaTerminos: z.literal(true, {
-    error: () => 'Debes aceptar los Términos y Condiciones',
+    error: () => 'Necesitamos que aceptes los términos para continuar',
   }),
 })
 

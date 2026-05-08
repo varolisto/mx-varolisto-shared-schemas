@@ -4,13 +4,13 @@ import { zStr } from '../helpers.js'
 import { isValidTelefonoMx } from '../validators/telefonoMx.js'
 
 const nombreReferenciaSchema = zStr()
-  .min(2, 'Mínimo 2 caracteres')
+  .min(2, 'Escríbelo completo')
   .max(100, 'Máximo 100 caracteres')
-  .regex(/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s'-]+$/, 'Solo se permiten letras')
+  .regex(/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s'-]+$/, 'Sólo letras, sin números ni símbolos')
 
 const telefonoReferenciaSchema = zStr().refine(
   isValidTelefonoMx,
-  'Ingresa un teléfono válido de 10 dígitos',
+  'Tu celular debe tener 10 dígitos',
 )
 
 const relacionReferenciaSchema = z.enum(RELACION_REFERENCIA, {
@@ -20,7 +20,7 @@ const relacionReferenciaSchema = z.enum(RELACION_REFERENCIA, {
 const emailReferenciaSchema = z
   .string()
   .max(100, 'Máximo 100 caracteres')
-  .email('Correo inválido')
+  .email('Revisa el correo, parece tener un error')
   .optional()
   .or(z.literal(''))
 
@@ -36,7 +36,7 @@ export const paso5Schema = z
     ref2Email: emailReferenciaSchema,
   })
   .refine((data) => data.ref1Telefono !== data.ref2Telefono, {
-    message: 'El teléfono de la segunda referencia no puede ser igual al primero',
+    message: 'Este teléfono es el mismo que el del Contacto 1',
     path: ['ref2Telefono'],
   })
 

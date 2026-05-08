@@ -57,7 +57,7 @@ describe('paso4Schema', () => {
     const r = paso4Schema.safeParse({ ...baseSinDeudas, ingresoMensual: 999 })
     expect(r.success).toBe(false)
     if (!r.success) {
-      expect(r.error.issues[0]?.message).toBe('Mínimo $1,000')
+      expect(r.error.issues[0]?.message).toBe('El ingreso debe ser de al menos $1,000')
     }
   })
 
@@ -68,7 +68,7 @@ describe('paso4Schema', () => {
     })
     expect(r.success).toBe(false)
     if (!r.success) {
-      expect(r.error.issues.some((i) => i.message === 'Indica cuántas deudas tienes')).toBe(true)
+      expect(r.error.issues.some((i) => i.message === 'Falta este dato')).toBe(true)
     }
   })
 
@@ -79,9 +79,7 @@ describe('paso4Schema', () => {
     })
     expect(r.success).toBe(false)
     if (!r.success) {
-      expect(r.error.issues.some((i) => i.message === 'Indica el monto total de tus deudas')).toBe(
-        true,
-      )
+      expect(r.error.issues.some((i) => i.message === 'Falta este dato')).toBe(true)
     }
   })
 
@@ -92,7 +90,7 @@ describe('paso4Schema', () => {
     })
     expect(r.success).toBe(false)
     if (!r.success) {
-      expect(r.error.issues.some((i) => i.message === 'Indica tu pago mensual')).toBe(true)
+      expect(r.error.issues.some((i) => i.message === 'Falta este dato')).toBe(true)
     }
   })
 

@@ -5,20 +5,20 @@ import { TIPO_VIVIENDA } from '../enums/tipoVivienda.js'
 import { enumSelecciona, zStr } from '../helpers.js'
 
 export const paso3Schema = z.object({
-  codigoPostal: zStr().regex(/^\d{5}$/, 'El CP debe tener 5 dígitos'),
+  codigoPostal: zStr().regex(/^\d{5}$/, 'El CP tiene 5 dígitos'),
   colonia: zStr('Selecciona una colonia')
     .min(1, 'Selecciona una colonia')
     .max(DIRECCION_TEXTO_MAX_LENGTH, 'Colonia demasiado larga'),
   municipio: zStr()
-    .min(2, 'Mínimo 2 caracteres')
+    .min(2, 'Escríbelo completo')
     .max(DIRECCION_TEXTO_MAX_LENGTH, 'Municipio demasiado largo'),
-  estado: zStr().min(1, 'Requerido').max(100),
+  estado: zStr().min(1, 'Falta este dato').max(100),
   ciudad: z.string().trim().max(DIRECCION_TEXTO_MAX_LENGTH).optional(),
   calle: zStr()
-    .min(2, 'Mínimo 2 caracteres')
+    .min(2, 'Escríbelo completo')
     .max(DIRECCION_TEXTO_MAX_LENGTH, 'Calle demasiado larga'),
-  numeroExterior: zStr('Campo requerido')
-    .min(1, 'Campo requerido')
+  numeroExterior: zStr('Necesitamos el número exterior')
+    .min(1, 'Necesitamos el número exterior')
     .max(DIRECCION_NUMERO_MAX_LENGTH, 'Número demasiado largo'),
   numeroInterior: z.string().trim().max(DIRECCION_NUMERO_MAX_LENGTH).optional(),
   aniosViviendo: enumSelecciona(ANIOS_VIVIENDO),
