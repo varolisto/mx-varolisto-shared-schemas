@@ -33,10 +33,12 @@ describe('calcularPropuestaResponseSchema', () => {
       monto_aprobado: 10000,
       plazo_aprobado: 4,
       tasa_mensual: 0.04,
-      comision_apertura: 500,
+      comision_apertura: 0.05,
+      comision_apertura_monto: 500,
+      iva_comision: 80,
       cuota_mensual: 2750,
       total_a_pagar: 11000,
-      monto_a_depositar: 9500,
+      monto_a_depositar: 9420,
       tabla_amortizacion: [
         {
           mes: 1,
@@ -50,6 +52,20 @@ describe('calcularPropuestaResponseSchema', () => {
       ],
     })
     expect(r.success).toBe(true)
+  })
+
+  it('rechaza respuesta sin comision_apertura_monto o iva_comision', () => {
+    const r = calcularPropuestaResponseSchema.safeParse({
+      monto_aprobado: 10000,
+      plazo_aprobado: 4,
+      tasa_mensual: 0.04,
+      comision_apertura: 0.05,
+      cuota_mensual: 2750,
+      total_a_pagar: 11000,
+      monto_a_depositar: 9500,
+      tabla_amortizacion: [],
+    })
+    expect(r.success).toBe(false)
   })
 })
 

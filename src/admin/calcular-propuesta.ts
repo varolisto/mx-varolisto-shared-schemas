@@ -25,6 +25,8 @@ export const calcularPropuestaResponseSchema = z.object({
   plazo_aprobado: z.number().int(),
   tasa_mensual: z.number(),
   comision_apertura: z.number(),
+  comision_apertura_monto: z.number(),
+  iva_comision: z.number(),
   cuota_mensual: z.number(),
   total_a_pagar: z.number(),
   monto_a_depositar: z.number(),
