@@ -29,25 +29,27 @@ describe('calcularPropuestaRequestSchema', () => {
 
 describe('calcularPropuestaResponseSchema', () => {
   it('acepta respuesta de amortización válida', () => {
+    // Fixture alineado con seed: Perfil A tercero_mas (tasa 4%, apertura 2%),
+    // monto $10,000 cae en bracket de cuota_servicio $129 (5001–10000).
     const r = calcularPropuestaResponseSchema.safeParse({
       monto_aprobado: 10000,
       plazo_aprobado: 4,
       tasa_mensual: 0.04,
-      comision_apertura: 0.05,
-      comision_apertura_monto: 500,
-      iva_comision: 80,
+      comision_apertura: 0.02,
+      comision_apertura_monto: 200,
+      iva_comision: 32,
       cuota_mensual: 2750,
       total_a_pagar: 11000,
-      monto_a_depositar: 9420,
+      monto_a_depositar: 9768,
       tabla_amortizacion: [
         {
           mes: 1,
-          cuota: 2750,
-          capital: 2350,
-          intereses: 400,
-          cuota_servicio: 0,
+          cuota: 2621,
+          capital: 2150,
+          intereses: 471,
+          cuota_servicio: 129,
           pago_total: 2750,
-          saldo_post: 7650,
+          saldo_post: 7850,
         },
       ],
     })
@@ -59,10 +61,10 @@ describe('calcularPropuestaResponseSchema', () => {
       monto_aprobado: 10000,
       plazo_aprobado: 4,
       tasa_mensual: 0.04,
-      comision_apertura: 0.05,
+      comision_apertura: 0.02,
       cuota_mensual: 2750,
       total_a_pagar: 11000,
-      monto_a_depositar: 9500,
+      monto_a_depositar: 9768,
       tabla_amortizacion: [],
     })
     expect(r.success).toBe(false)
