@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.10.0
+
+### Minor Changes
+
+- 8d89fb8: admin/calcular-propuesta: añadir campos `comision_apertura_monto` e `iva_comision` al response schema. Ambos son montos en MXN — el primero es la comisión de apertura absoluta (sin IVA) y el segundo es el IVA aplicado sobre esa comisión. Necesarios para reflejar correctamente que el IVA de la comisión se descuenta del depósito al cliente.
+
 ## 0.9.2
 
 ### Patch Changes
