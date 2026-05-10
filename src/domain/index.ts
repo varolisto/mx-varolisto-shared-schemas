@@ -1,5 +1,6 @@
 export * from './archivo.js'
 export * from './direccion.js'
+export * from './getPlazosDisponibles.js'
 export * from './ingreso.js'
 export * from './pago.js'
 export * from './prestamo.js'
