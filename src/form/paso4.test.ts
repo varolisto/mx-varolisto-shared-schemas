@@ -162,7 +162,7 @@ describe('paso4Schema', () => {
     expect(r.success).toBe(false)
     if (!r.success) {
       const issue = r.error.issues.find((i) => i.path[0] === 'gastoMensual')
-      expect(issue?.message).toBe('Tu gasto no puede ser mayor que tu ingreso')
+      expect(issue?.message).toBe('Tus gastos mensuales no pueden superar tus ingresos')
     }
   })
 })
