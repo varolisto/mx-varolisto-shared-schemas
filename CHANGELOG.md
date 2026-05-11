@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.12.1
+
+### Patch Changes
+
+- 4fc17bd: Reformula el mensaje de error del refine cruzado `gastoMensual ≤ ingresoMensual` en `paso4Schema`: ahora dice "Tus gastos mensuales no pueden superar tus ingresos" en lugar de "Tu gasto no puede ser mayor que tu ingreso". Cambio cosmético — la lógica de validación no cambia.
+
 ## 0.12.0
 
 ### Minor Changes
