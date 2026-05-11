@@ -43,6 +43,7 @@ export const validSolicitudCompleta = {
   estadoCivil: 'casado' as const,
   dependientesEconomicos: 'dos' as const,
   ingresoMensual: 25000,
+  gastoMensual: 8000,
   tieneDeudas: 'no' as const,
   cantidadDeudas: undefined,
   montoTotalDeudas: undefined,

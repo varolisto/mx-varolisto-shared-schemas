@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { EMPLEADOR_MAX_LENGTH } from '../constants.js'
+import { EMPLEADOR_MAX_LENGTH, GASTO_MENSUAL_MIN } from '../constants.js'
 import { ANTIGUEDAD } from '../enums/antiguedad.js'
 import { CANTIDAD_DEUDAS } from '../enums/cantidadDeudas.js'
 import { DEPENDIENTES_ECONOMICOS } from '../enums/dependientesEconomicos.js'
@@ -20,10 +20,17 @@ export const paso4Schema = z
     ingresoMensual: z
       .number({ error: () => 'Ingresa un ingreso válido' })
       .min(1000, 'El ingreso debe ser de al menos $1,000'),
+    gastoMensual: z
+      .number({ error: () => 'Ingresa un gasto válido' })
+      .min(GASTO_MENSUAL_MIN, 'El gasto no puede ser negativo'),
     tieneDeudas: enumSelecciona(['si', 'no'] as const),
     cantidadDeudas: z.enum(CANTIDAD_DEUDAS).optional(),
     montoTotalDeudas: z.enum(MONTO_TOTAL_DEUDAS).optional(),
     pagoMensualDeudas: z.number().min(0).optional(),
+  })
+  .refine((data) => data.gastoMensual <= data.ingresoMensual, {
+    message: 'Tu gasto no puede ser mayor que tu ingreso',
+    path: ['gastoMensual'],
   })
   .refine((data) => data.tieneDeudas !== 'si' || data.cantidadDeudas !== undefined, {
     message: 'Falta este dato',
