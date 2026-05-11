@@ -7,6 +7,9 @@ export const PLAZO_MAX = 6
 export const NOTA_OPERADOR_MIN = 10
 export const NOTA_OPERADOR_MAX = 1000
 
+export const GASTO_MENSUAL_MIN = 0
+export const GASTO_MENSUAL_STEP = 500
+
 export const FOLIO_REGEX = /^VL-\d{6}-\d{4}$/
 
 // Límites de longitud de campos — fuente única de verdad para form/ y domain/

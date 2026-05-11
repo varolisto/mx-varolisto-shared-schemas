@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   FOLIO_REGEX,
+  GASTO_MENSUAL_MIN,
+  GASTO_MENSUAL_STEP,
   MONTO_MAX,
   MONTO_MIN,
   NOTA_OPERADOR_MAX,
@@ -37,6 +39,16 @@ describe('constantes de reglas de negocio', () => {
 
     it('NOTA_OPERADOR_MAX es 1000', () => {
       expect(NOTA_OPERADOR_MAX).toBe(1000)
+    })
+  })
+
+  describe('GASTO_MENSUAL_MIN / GASTO_MENSUAL_STEP', () => {
+    it('GASTO_MENSUAL_MIN es 0', () => {
+      expect(GASTO_MENSUAL_MIN).toBe(0)
+    })
+
+    it('GASTO_MENSUAL_STEP es 500', () => {
+      expect(GASTO_MENSUAL_STEP).toBe(500)
     })
   })
 

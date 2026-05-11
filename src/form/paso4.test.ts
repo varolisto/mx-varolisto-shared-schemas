@@ -8,6 +8,7 @@ const baseSinDeudas = {
   estadoCivil: 'casado' as const,
   dependientesEconomicos: 'dos' as const,
   ingresoMensual: 25000,
+  gastoMensual: 8000,
   tieneDeudas: 'no' as const,
 }
 
@@ -120,5 +121,48 @@ describe('paso4Schema', () => {
   it('rechaza nombreEmpleadorNegocio con más de 120 caracteres', () => {
     const r = paso4Schema.safeParse({ ...baseSinDeudas, nombreEmpleadorNegocio: 'A'.repeat(121) })
     expect(r.success).toBe(false)
+  })
+
+  it('rechaza cuando falta gastoMensual', () => {
+    const { gastoMensual: _, ...sinGasto } = baseSinDeudas
+    const r = paso4Schema.safeParse(sinGasto)
+    expect(r.success).toBe(false)
+  })
+
+  it('rechaza gastoMensual no numérico', () => {
+    const r = paso4Schema.safeParse({ ...baseSinDeudas, gastoMensual: 'mil pesos' })
+    expect(r.success).toBe(false)
+  })
+
+  it('rechaza gastoMensual negativo', () => {
+    const r = paso4Schema.safeParse({ ...baseSinDeudas, gastoMensual: -100 })
+    expect(r.success).toBe(false)
+  })
+
+  it('acepta gastoMensual = 0', () => {
+    const r = paso4Schema.safeParse({ ...baseSinDeudas, gastoMensual: 0 })
+    expect(r.success).toBe(true)
+  })
+
+  it('acepta gastoMensual igual al ingresoMensual', () => {
+    const r = paso4Schema.safeParse({
+      ...baseSinDeudas,
+      ingresoMensual: 25000,
+      gastoMensual: 25000,
+    })
+    expect(r.success).toBe(true)
+  })
+
+  it('rechaza gastoMensual mayor al ingresoMensual', () => {
+    const r = paso4Schema.safeParse({
+      ...baseSinDeudas,
+      ingresoMensual: 20000,
+      gastoMensual: 20001,
+    })
+    expect(r.success).toBe(false)
+    if (!r.success) {
+      const issue = r.error.issues.find((i) => i.path[0] === 'gastoMensual')
+      expect(issue?.message).toBe('Tu gasto no puede ser mayor que tu ingreso')
+    }
   })
 })
