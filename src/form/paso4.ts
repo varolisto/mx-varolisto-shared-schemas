@@ -29,7 +29,7 @@ export const paso4Schema = z
     pagoMensualDeudas: z.number().min(0).optional(),
   })
   .refine((data) => data.gastoMensual <= data.ingresoMensual, {
-    message: 'Tu gasto no puede ser mayor que tu ingreso',
+    message: 'Tus gastos mensuales no pueden superar tus ingresos',
     path: ['gastoMensual'],
   })
   .refine((data) => data.tieneDeudas !== 'si' || data.cantidadDeudas !== undefined, {
