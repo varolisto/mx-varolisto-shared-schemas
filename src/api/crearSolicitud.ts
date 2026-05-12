@@ -2,13 +2,16 @@ import { z } from 'zod'
 import { FOLIO_REGEX } from '../constants.js'
 import { ESTADO_SOLICITUD } from '../enums/estadoSolicitud.js'
 import { solicitudSchema } from '../form/index.js'
+import { telemetriaSolicitudSchema } from '../form/telemetriaSolicitud.js'
 
 /**
  * Schema del request del endpoint POST /api/solicitudes.
- * Idéntico al schema compuesto del formulario — punto de extensión futuro
- * si los dos se llegan a separar.
+ * Combina el formulario público con un bloque opcional de telemetría
+ * pasiva capturada por el sistema (Bloque 1.B del rediseño v7).
  */
-export const crearSolicitudRequestSchema = solicitudSchema
+export const crearSolicitudRequestSchema = solicitudSchema.and(
+  z.object({ telemetria: telemetriaSolicitudSchema.optional() }),
+)
 
 export type CrearSolicitudRequest = z.infer<typeof crearSolicitudRequestSchema>
 

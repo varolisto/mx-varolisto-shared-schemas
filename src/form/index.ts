@@ -17,6 +17,8 @@ export {
 } from './paso6.js'
 export type { Paso7Data } from './paso7.js'
 export { paso7Schema } from './paso7.js'
+export type { TelemetriaSolicitud } from './telemetriaSolicitud.js'
+export { telemetriaSolicitudSchema } from './telemetriaSolicitud.js'
 
 import { paso1Schema } from './paso1.js'
 import { paso2Schema } from './paso2.js'
