@@ -60,8 +60,15 @@ export const telemetriaSolicitudSchema = z
   .object({
     iniciadoEn: z.iso.datetime(),
     enviadoEn: z.iso.datetime(),
+    // Wall-clock total entre `iniciadoEn` y `enviadoEn`. Incluye idle time
+    // y los pasos 1 y 7 (landing + revisión). NO es señal anti-fraude.
     duracionTotalMs: z.number().int().nonnegative(),
     tiemposPaso: tiemposPasoSchema,
+    // Suma de pasos 2-6 (captura real de datos). Campo derivado que consume
+    // el scoring anti-fraude del Bloque 2C. Pasos 1 (calculadora) y 7
+    // (revisión) quedan fuera intencionalmente — su tiempo mide cosas
+    // distintas a "esfuerzo de llenado".
+    tiempoCapturaFormularioMs: z.number().int().nonnegative(),
     edicionesPorCampo: edicionesPorCampoSchema,
     dispositivo: dispositivoSchema,
     red: redSchema.optional(),
@@ -72,5 +79,19 @@ export const telemetriaSolicitudSchema = z
     message: 'enviadoEn no puede ser anterior a iniciadoEn',
     path: ['enviadoEn'],
   })
+  .refine(
+    (data) => {
+      const { paso2Ms, paso3Ms, paso4Ms, paso5Ms, paso6Ms } = data.tiemposPaso
+      const pasos = [paso2Ms, paso3Ms, paso4Ms, paso5Ms, paso6Ms]
+      // Si algún paso es null, no podemos comparar — el cliente decide qué mandar.
+      if (pasos.some((p) => p === null)) return true
+      const suma = pasos.reduce<number>((acc, p) => acc + (p ?? 0), 0)
+      return data.tiempoCapturaFormularioMs === suma
+    },
+    {
+      message: 'tiempoCapturaFormularioMs debe ser la suma de tiempos de pasos 2–6',
+      path: ['tiempoCapturaFormularioMs'],
+    },
+  )
 
 export type TelemetriaSolicitud = z.infer<typeof telemetriaSolicitudSchema>

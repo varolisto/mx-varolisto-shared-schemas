@@ -22,6 +22,7 @@ const minimal = {
     paso6Ms: 90_000,
     paso7Ms: 55_000,
   },
+  tiempoCapturaFormularioMs: 365_000,
   edicionesPorCampo: {
     nombre: 1,
     curp: 2,
@@ -272,5 +273,70 @@ describe('telemetriaSolicitudSchema', () => {
   it('rechaza si falta dispositivo', () => {
     const { dispositivo: _, ...sinDispositivo } = minimal
     expect(telemetriaSolicitudSchema.safeParse(sinDispositivo).success).toBe(false)
+  })
+
+  it('rechaza si falta tiempoCapturaFormularioMs', () => {
+    const { tiempoCapturaFormularioMs: _, ...sinDerivado } = minimal
+    expect(telemetriaSolicitudSchema.safeParse(sinDerivado).success).toBe(false)
+  })
+
+  it('rechaza tiempoCapturaFormularioMs negativo', () => {
+    const r = telemetriaSolicitudSchema.safeParse({
+      ...minimal,
+      tiempoCapturaFormularioMs: -1,
+    })
+    expect(r.success).toBe(false)
+  })
+
+  it('rechaza tiempoCapturaFormularioMs no entero', () => {
+    const r = telemetriaSolicitudSchema.safeParse({
+      ...minimal,
+      tiempoCapturaFormularioMs: 365.5,
+    })
+    expect(r.success).toBe(false)
+  })
+
+  it('rechaza tiempoCapturaFormularioMs que no coincide con la suma de pasos 2-6 cuando todos están medidos', () => {
+    const r = telemetriaSolicitudSchema.safeParse({
+      ...minimal,
+      tiempoCapturaFormularioMs: 999_999,
+    })
+    expect(r.success).toBe(false)
+    if (!r.success) {
+      const issue = r.error.issues.find((i) => i.path[0] === 'tiempoCapturaFormularioMs')
+      expect(issue?.message).toContain('pasos 2–6')
+    }
+  })
+
+  it('NO incluye pasos 1 y 7 en el cálculo de tiempoCapturaFormularioMs', () => {
+    // Si la suma incluyera paso1 (90k) y paso7 (55k), el total seria 510k.
+    // 510k != 365k → si el schema fuera mal, este test rechazaria al pasar 365k.
+    expect(telemetriaSolicitudSchema.safeParse(minimal).success).toBe(true)
+  })
+
+  it('permite tiempoCapturaFormularioMs sin validar suma si algún paso 2-6 es null', () => {
+    const r = telemetriaSolicitudSchema.safeParse({
+      ...minimal,
+      tiemposPaso: { ...minimal.tiemposPaso, paso4Ms: null },
+      tiempoCapturaFormularioMs: 285_000, // distinto a la suma posible
+    })
+    expect(r.success).toBe(true)
+  })
+
+  it('acepta tiempoCapturaFormularioMs = 0 si todos los pasos 2-6 son null', () => {
+    const r = telemetriaSolicitudSchema.safeParse({
+      ...minimal,
+      tiemposPaso: {
+        paso1Ms: 5_000,
+        paso2Ms: null,
+        paso3Ms: null,
+        paso4Ms: null,
+        paso5Ms: null,
+        paso6Ms: null,
+        paso7Ms: 2_000,
+      },
+      tiempoCapturaFormularioMs: 0,
+    })
+    expect(r.success).toBe(true)
   })
 })

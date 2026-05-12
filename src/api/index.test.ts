@@ -19,6 +19,7 @@ const telemetriaValida = {
     paso6Ms: 90_000,
     paso7Ms: 55_000,
   },
+  tiempoCapturaFormularioMs: 365_000,
   edicionesPorCampo: { nombre: 1, curp: 2 },
   dispositivo: {
     userAgent: 'Mozilla/5.0',
