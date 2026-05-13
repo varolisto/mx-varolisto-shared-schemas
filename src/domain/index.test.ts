@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   validArchivoDomain,
+  validArchivoValidacionDomain,
   validDireccionDomain,
   validIngresoDomain,
   validReferenciaDomain,
@@ -9,6 +10,7 @@ import {
   validSolicitudDomain,
 } from '../__fixtures__/domain.fixtures.js'
 import { archivoDomainSchema } from './archivo.js'
+import { archivoValidacionDomainSchema } from './archivoValidacion.js'
 import { direccionDomainSchema } from './direccion.js'
 import { ingresoDomainSchema } from './ingreso.js'
 import { referenciaDomainSchema } from './referencia.js'
@@ -49,6 +51,10 @@ describe('dominio — schemas del modelo persistido', () => {
 
   it('archivoDomainSchema: acepta datos válidos', () => {
     expect(archivoDomainSchema.safeParse(validArchivoDomain).success).toBe(true)
+  })
+
+  it('archivoValidacionDomainSchema: acepta datos válidos', () => {
+    expect(archivoValidacionDomainSchema.safeParse(validArchivoValidacionDomain).success).toBe(true)
   })
 
   it('scoringDomainSchema: acepta datos válidos', () => {
