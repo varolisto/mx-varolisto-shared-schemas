@@ -1,4 +1,5 @@
 export * from './archivo.js'
+export * from './archivoValidacion.js'
 export * from './direccion.js'
 export * from './getPlazosDisponibles.js'
 export * from './ingreso.js'

@@ -62,6 +62,27 @@ export const validArchivoDomain = {
   mimeType: 'image/jpeg',
 }
 
+export const validArchivoValidacionDomain = {
+  id: '11111111-2222-4333-8444-555555555555',
+  archivoId: '6f1e3b6a-9c0e-4f4b-9c1f-8d2a2e7e0e51',
+  intento: 1,
+  estado: 'completado' as const,
+  decisionOcr: 'validacion_automatica_ok' as const,
+  proveedor: 'aws_textract' as const,
+  razonEstructurada: {
+    curpCoincide: true,
+    nombreCoincide: true,
+    fechaCoincide: true,
+  },
+  camposCruzados: {
+    curp: { declarado: VALID_CURP, extraido: VALID_CURP, confidence: 99.4 },
+  },
+  rawPayloadTextract: { Blocks: [] },
+  errorDetalle: null,
+  procesadoAt: '2026-05-12T18:30:00.000Z',
+  createdAt: '2026-05-12T18:29:00.000Z',
+}
+
 export const validScoringDomain = {
   v1Historial: 20,
   v2CalidadIngreso: 15,
